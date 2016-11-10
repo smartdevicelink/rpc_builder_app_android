@@ -1,0 +1,20 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="layout.ParamFragment">
+
+    <TextView
+        android:id="@+id/request_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RPC Request"
+        android:gravity="center"
+        android:textSize="@dimen/font_size_medium"/>
+    <ListView
+        android:layout_marginTop="@dimen/font_size_medium"
+        android:id="@+id/param_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
+
+</FrameLayout>

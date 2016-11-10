@@ -1,8 +1,10 @@
 package com.smartdevicelink.rpcbuilder;
 
+import android.content.Intent;
 import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -12,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 

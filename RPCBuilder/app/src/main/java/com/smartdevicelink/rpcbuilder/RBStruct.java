@@ -18,4 +18,6 @@ public class RBStruct extends RBElement {
     public void addParameter(RBParam parameter) {
         mParams.add(parameter);
     }
+
+    public Vector<RBParam> getParams(){ return mParams; }
 }
