@@ -12,13 +12,13 @@ import java.text.ParseException;
  */
 
 public class RBParam extends RBEnum {
-    private String mType;
-    private String mDefaultValue;
-    private Number mMinValue;
-    private Number mMaxValue;
-    private Number mMaxLength;
-    private Boolean mRequiresArray;
-    private Boolean mIsMandatory;
+    public String mType;
+    public String mDefaultValue;
+    public Number mMinValue;
+    public Number mMaxValue;
+    public Number mMaxLength;
+    public Boolean mRequiresArray;
+    public Boolean mIsMandatory;
 
     public RBParam(Attributes attributes) {
         super(attributes);

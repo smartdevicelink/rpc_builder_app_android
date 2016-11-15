@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "com.smartdevicelink.rpcbuilder"
-        minSdkVersion 9
+        minSdkVersion 14 //for functionality
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"

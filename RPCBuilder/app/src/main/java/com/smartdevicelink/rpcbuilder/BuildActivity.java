@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -57,6 +58,8 @@ public class BuildActivity extends AppCompatActivity {
 
             if(RAI_request == null) // there is no RAI spec in XML file, go back to Settings
                 finish();
+            else
+                this.setTitle(RAI_request.name);
 
             String[] paramNames = new String[RAI_request.getParams().size()];
             int i = 0;
@@ -64,14 +67,13 @@ public class BuildActivity extends AppCompatActivity {
                 paramNames[i++] = rbParam.name;
             }
 
-            ArrayAdapter<String> paramAdapter =
-                    new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, paramNames);
+            //ArrayAdapter<String> regAdapter =
+            //        new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, paramNames);
+
+            RBParamAdapter paramAdapter = new RBParamAdapter(this, RAI_request.getParams());
+
             ListView listView = (ListView) findViewById(R.id.param_list);
             listView.setAdapter(paramAdapter);
-
-            TextView textView = (TextView) findViewById(R.id.request_name);
-            textView.setText(RAI_request.name);
-
 
         }else{ // Display list of all RPC requests
 
