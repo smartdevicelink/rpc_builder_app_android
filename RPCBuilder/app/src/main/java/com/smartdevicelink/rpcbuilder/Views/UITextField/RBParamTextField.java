@@ -47,8 +47,12 @@ public class RBParamTextField{
             RBParamEditText.setFilters(new InputFilter[]{filter});
         }
 
-        if(rbParam.mMaxLength != null)
-            RBParamEditText.setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(rbParam.mMaxLength.intValue())});
+        if(rbParam.mMaxLength != null){
+            if(filter != null)
+                RBParamEditText.setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(rbParam.mMaxLength.intValue())});
+            else
+                RBParamEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(rbParam.mMaxLength.intValue())});
+        }
 
         if(rbParam.mDefaultValue != null){
             RBParamEditText.setText(rbParam.mDefaultValue);

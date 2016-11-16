@@ -3,7 +3,6 @@ package com.smartdevicelink.rpcbuilder;
 import android.annotation.TargetApi;
 
 import android.app.ActionBar;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -15,10 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.smartdevicelink.rpcbuilder.Views.Fragments.RBParameterFragment;
+import com.smartdevicelink.rpcbuilder.Views.Fragments.RBParameterFragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,20 +29,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 
-import layout.ParamFragment;
-
 public class BuildActivity extends AppCompatActivity {
 
     private String filename = "Mobile_API.xml";
     private String connectionType = "TCP";
     private String ip_address = "";
     private String port = "";
+    private ParserHandler parserHandler = null;
+    private RBParamAdapter ListParamAdapter = null;
+    private RBParamAdapter ListLvl2ParamAdapter = null;
+    private String request_name = "";
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_param);
+        setContentView(R.layout.activity_build);
 
         String callingActivity = null;
         callingActivity = handleIntent(getIntent());
@@ -48,7 +53,15 @@ public class BuildActivity extends AppCompatActivity {
 
             // TODO: Connect to SDl Core
 
-            ParserHandler parserHandler = parseXML();
+            // add Parameter Fragment
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            RBParameterFragment fragment = new RBParameterFragment();
+            fragmentTransaction.add(R.id.activity_build, fragment, "ListRBFuncParams");
+            fragmentTransaction.commit();
+
+            parserHandler = parseXML();
 
             RBFunction RAI_request = null;
             for(RBFunction rb : parserHandler.getRequests()){
@@ -58,26 +71,24 @@ public class BuildActivity extends AppCompatActivity {
 
             if(RAI_request == null) // there is no RAI spec in XML file, go back to Settings
                 finish();
-            else
-                this.setTitle(RAI_request.name);
-
-            String[] paramNames = new String[RAI_request.getParams().size()];
-            int i = 0;
-            for(RBParam rbParam : RAI_request.getParams()){
-                paramNames[i++] = rbParam.name;
+            else{
+                request_name = RAI_request.name;
+                revertTitle();
             }
+
 
             //ArrayAdapter<String> regAdapter =
             //        new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, paramNames);
 
-            RBParamAdapter paramAdapter = new RBParamAdapter(this, RAI_request.getParams());
-
-            ListView listView = (ListView) findViewById(R.id.param_list);
-            listView.setAdapter(paramAdapter);
+            ListParamAdapter = new RBParamAdapter(this, RAI_request.getParams(), parserHandler);
 
         }else{ // Display list of all RPC requests
 
         }
+    }
+
+    public void revertTitle(){
+        this.setTitle(request_name);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,4 +151,11 @@ public class BuildActivity extends AppCompatActivity {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public void setListParamAdapter(RBParamAdapter RBpA){ ListParamAdapter = RBpA; }
+    public RBParamAdapter getListParamAdapter(){return ListParamAdapter;}
+
+    public void setListLvl2ParamAdapter(RBParamAdapter RBpA){ ListLvl2ParamAdapter = RBpA; }
+    public RBParamAdapter getListLvl2ParamAdapter(){return ListLvl2ParamAdapter;}
+
 }

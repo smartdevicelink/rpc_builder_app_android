@@ -11,16 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.smartdevicelink.rpcbuilder.Views.UIStructButton.RBStructButton;
 import com.smartdevicelink.rpcbuilder.Views.UISwitch.RBSwitch;
 import com.smartdevicelink.rpcbuilder.Views.UITextField.RBParamTextField;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -75,6 +78,7 @@ public class RBParamAdapter extends BaseAdapter {
         EditText field;
         Switch picker;
         Spinner spinner;
+        Button button;
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -82,7 +86,7 @@ public class RBParamAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         RBParam rbParam = (RBParam) mData.get(position);
-        if (convertView == null) {
+        if (true){
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.simple_field, null);
 
@@ -103,11 +107,16 @@ public class RBParamAdapter extends BaseAdapter {
                 }else if(rbParam.mType.equals(RBBaseObject.RBTypeBooleanKey)) {
                     RBSwitch rbSwitch = new RBSwitch(rbParam, (Switch) convertView.findViewById(R.id.param_switch));
                     holder.picker = rbSwitch.getSwitch();
+                }else if(rbStruct != null){
+                    RBStructButton rbStructButton = new RBStructButton(rbStruct, (Button) convertView.findViewById(R.id.param_struct), this);
+                    holder.button = rbStructButton.getButton();
+                }else if(rbEnum != null){
+
                 }
             }
 
-            View[] views = {holder.field, holder.picker, holder.spinner};
-            int[] view_ids = {R.id.param_field, R.id.param_switch, R.id.param_spinner};
+            View[] views = {holder.field, holder.picker, holder.spinner, holder.button};
+            int[] view_ids = {R.id.param_field, R.id.param_switch, R.id.param_spinner, R.id.param_struct};
 
             for(int i = 0; i < views.length; i++){
                 if(views[i] == null){
@@ -116,12 +125,15 @@ public class RBParamAdapter extends BaseAdapter {
                     views[i] = null;
                 }
             }
+            convertView.setTag(rbParam.name);
+        }else{
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder)convertView.getTag();
         }
         return convertView;
     }
+
+    public ParserHandler getParserHandler(){ return mParserHandler; }
+
+    public Context getContext(){ return mContext; }
 
 }

@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".75"
             android:textSize="@dimen/font_size_medium"
+            android:layout_gravity="center_vertical"
             android:text="Parameter Name"
             />
 
@@ -22,15 +23,22 @@
             android:id="@+id/param_switch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".25"
-            android:layout_gravity="center_vertical"
-            tools:targetApi="ice_cream_sandwich"/>
+            android:layout_weight=".125"
+            android:layout_gravity="center_vertical"/>
+
+        <Button
+            android:id="@+id/param_struct"
+            android:background="@drawable/ic_keyboard_arrow_right_white_36dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".125"
+            android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
 
     <EditText
         android:id="@+id/param_field"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
         android:hint="Enter data here"
@@ -38,7 +46,7 @@
 
     <Spinner
         android:id="@+id/param_spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
 
