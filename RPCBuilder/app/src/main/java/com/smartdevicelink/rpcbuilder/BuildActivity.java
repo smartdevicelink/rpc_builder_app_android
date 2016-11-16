@@ -36,9 +36,9 @@ public class BuildActivity extends AppCompatActivity {
     private String ip_address = "";
     private String port = "";
     private ParserHandler parserHandler = null;
-    private RBParamAdapter ListParamAdapter = null;
-    private RBParamAdapter ListLvl2ParamAdapter = null;
-    private String request_name = "";
+    private RBFunction rbFunction = null;
+    private RBStruct rbStruct = null;
+    private RBEnum rbEnum = null;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -72,15 +72,9 @@ public class BuildActivity extends AppCompatActivity {
             if(RAI_request == null) // there is no RAI spec in XML file, go back to Settings
                 finish();
             else{
-                request_name = RAI_request.name;
+                rbFunction = RAI_request;
                 revertTitle();
             }
-
-
-            //ArrayAdapter<String> regAdapter =
-            //        new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, paramNames);
-
-            ListParamAdapter = new RBParamAdapter(this, RAI_request.getParams(), parserHandler);
 
         }else{ // Display list of all RPC requests
 
@@ -88,7 +82,8 @@ public class BuildActivity extends AppCompatActivity {
     }
 
     public void revertTitle(){
-        this.setTitle(request_name);
+        if(rbFunction != null)
+            this.setTitle(rbFunction.name);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -152,10 +147,14 @@ public class BuildActivity extends AppCompatActivity {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void setListParamAdapter(RBParamAdapter RBpA){ ListParamAdapter = RBpA; }
-    public RBParamAdapter getListParamAdapter(){return ListParamAdapter;}
+    public RBFunction getRBFunction(){ return rbFunction; }
+    public RBStruct getRBStruct() { return rbStruct; }
+    public RBEnum getRBEnum() {return rbEnum;}
 
-    public void setListLvl2ParamAdapter(RBParamAdapter RBpA){ ListLvl2ParamAdapter = RBpA; }
-    public RBParamAdapter getListLvl2ParamAdapter(){return ListLvl2ParamAdapter;}
+    public void setRBFunction(RBFunction rb){ rbFunction = rb; }
+    public void setRBStruct(RBStruct rb) { rbStruct = rb; }
+    public void setRBEnum(RBEnum rb) { rbEnum = rb; }
+
+    public ParserHandler getParserHandler() { return parserHandler; }
 
 }

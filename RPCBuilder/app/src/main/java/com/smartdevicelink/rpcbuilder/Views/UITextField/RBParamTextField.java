@@ -1,5 +1,6 @@
 package com.smartdevicelink.rpcbuilder.Views.UITextField;
 
+import android.content.Context;
 import android.sax.TextElementListener;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -14,48 +15,42 @@ import com.smartdevicelink.rpcbuilder.RBParam;
  * Created by austinkirk on 11/14/16.
  */
 
-public class RBParamTextField{
+public class RBParamTextField extends EditText{
 
-    private EditText RBParamEditText = null;
-    private RBParam rbParam;
-
-    public RBParamTextField(RBParam parameter, EditText et){
-        RBParamEditText = et;
-        rbParam = parameter;
-        setParameter(parameter);
+    public RBParamTextField(Context context){
+        super(context);
     }
 
-    public void setParameter(RBParam parameter){
-        rbParam = parameter;
+    public void format(RBParam rbParam){
         InputFilter filter = null;
 
         if(rbParam.mType.equals(RBBaseObject.RBTypeStringKey)){
-            RBParamEditText.setInputType(InputType.TYPE_TEXT_VARIATION_NORMAL);
+            this.setInputType(InputType.TYPE_TEXT_VARIATION_NORMAL);
         }else if(rbParam.mType.equals(RBBaseObject.RBTypeIntegerKey)){
-            RBParamEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.setInputType(InputType.TYPE_CLASS_NUMBER);
         }else if(rbParam.mType.equals(RBBaseObject.RBTypeLongKey) || rbParam.mType.equals(RBBaseObject.RBTypeFloatKey) ||
         rbParam.mType.equals(RBBaseObject.RBTypeDoubleKey)){
-            RBParamEditText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
+            this.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
         }
 
         if(rbParam.mDefaultValue != null)
-            RBParamEditText.setText(rbParam.mDefaultValue);
+            this.setText(rbParam.mDefaultValue);
 
         if(rbParam.mMinValue != null && rbParam.mMaxValue != null){
             if(filter == null)
                 filter = new InputFilterMinMax(rbParam.mMinValue.toString(), rbParam.mMaxValue.toString());
-            RBParamEditText.setFilters(new InputFilter[]{filter});
+            this.setFilters(new InputFilter[]{filter});
         }
 
         if(rbParam.mMaxLength != null){
             if(filter != null)
-                RBParamEditText.setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(rbParam.mMaxLength.intValue())});
+                this.setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(rbParam.mMaxLength.intValue())});
             else
-                RBParamEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(rbParam.mMaxLength.intValue())});
+                this.setFilters(new InputFilter[]{new InputFilter.LengthFilter(rbParam.mMaxLength.intValue())});
         }
 
         if(rbParam.mDefaultValue != null){
-            RBParamEditText.setText(rbParam.mDefaultValue);
+            this.setText(rbParam.mDefaultValue);
         }
     }
 
@@ -86,10 +81,6 @@ public class RBParamTextField{
         private boolean isInRange(int a, int b, int c) {
             return b > a ? c >= a && c <= b : c >= b && c <= a;
         }
-    }
-
-    public EditText getEditText(){
-        return RBParamEditText;
     }
 
 }

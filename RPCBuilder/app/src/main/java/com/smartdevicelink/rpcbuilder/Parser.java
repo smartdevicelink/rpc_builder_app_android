@@ -33,18 +33,6 @@ public class Parser {
         mXmlReader.setContentHandler(mParserHandler);
 
         mXmlReader.parse(new InputSource(inputStream));
-
-        for(RBFunction rb : mParserHandler.getRequests()){
-            String s = "";
-            for( RBParam param : rb.getParams()) {
-                String t = "";
-                for(Map.Entry<String, String> prop: param.properties.entrySet()){
-                    t = prop.getKey() + " : " + prop.getValue() + ", ";
-                }
-                s += param.name + "(" + t +"), ";
-            }
-            Log.d("Parser", "Name: " + rb.name + ", Parameters: "+ s);
-        }
     }
 
     public ParserHandler getParserHandler(){
