@@ -25,7 +25,7 @@ public class RBParamTextField extends EditText{
         InputFilter filter = null;
 
         if(rbParam.mType.equals(RBBaseObject.RBTypeStringKey)){
-            this.setInputType(InputType.TYPE_TEXT_VARIATION_NORMAL);
+            //this.setInputType(InputType.);
         }else if(rbParam.mType.equals(RBBaseObject.RBTypeIntegerKey)){
             this.setInputType(InputType.TYPE_CLASS_NUMBER);
         }else if(rbParam.mType.equals(RBBaseObject.RBTypeLongKey) || rbParam.mType.equals(RBBaseObject.RBTypeFloatKey) ||

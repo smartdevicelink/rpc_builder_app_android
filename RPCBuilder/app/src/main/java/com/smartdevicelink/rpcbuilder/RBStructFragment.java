@@ -1,8 +1,9 @@
-package com.smartdevicelink.rpcbuilder.Views.Fragments;
+package com.smartdevicelink.rpcbuilder;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,17 +16,22 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.smartdevicelink.rpcbuilder.BuildActivity;
+import com.smartdevicelink.rpcbuilder.Parser;
 import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.RBFunction;
 import com.smartdevicelink.rpcbuilder.RBParam;
 import com.smartdevicelink.rpcbuilder.RBParamView;
 import com.smartdevicelink.rpcbuilder.RBStruct;
 
+import org.xml.sax.helpers.DefaultHandler;
+
 /**
  * Created by austinkirk on 11/15/16.
  */
 
 public class RBStructFragment extends Fragment {
+
+    private RBStruct request;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,7 +40,7 @@ public class RBStructFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_param, container, false);
 
         BuildActivity buildActivity = (BuildActivity) getActivity();
-        RBStruct request = buildActivity.getRBStruct();
+        request = buildActivity.getRBStruct();
 
         if(request != null) {
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -47,10 +53,17 @@ public class RBStructFragment extends Fragment {
                 linearLayout.addView(rb);
             }
 
+            getActivity().setTitle(request.name);
             setHasOptionsMenu(true);
         }
 
         return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        getActivity().setTitle(request.name);
     }
 
     @Override
@@ -67,12 +80,10 @@ public class RBStructFragment extends Fragment {
                 android.app.FragmentManager fragmentManager = getActivity().getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                fragmentTransaction.hide(fragmentManager.findFragmentByTag("ListRBStructParams:" + ((BuildActivity) getActivity()).getRBStruct().name));
-                fragmentTransaction.show(fragmentManager.findFragmentByTag("ListRBFuncParams"));
-
+                fragmentTransaction.hide(this);
                 fragmentTransaction.commit();
 
-                ((BuildActivity) getActivity()).revertTitle();
+                ((BuildActivity) getActivity()).showRBParameterFragment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

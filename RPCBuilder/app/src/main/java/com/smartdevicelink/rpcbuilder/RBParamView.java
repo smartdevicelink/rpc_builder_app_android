@@ -2,6 +2,7 @@ package com.smartdevicelink.rpcbuilder;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,7 +28,9 @@ public class RBParamView extends LinearLayout {
     private RBParam rbParam;
     private String attr_name;
     private String attr_type;
-    private LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+    private LinearLayout.LayoutParams wrap_params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    private LinearLayout.LayoutParams match_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+
 
     public RBParamView(Context context){
         super(context);
@@ -76,13 +79,16 @@ public class RBParamView extends LinearLayout {
         } else if (rbStruct != null) {
             RBStructButton view = new RBStructButton(getContext());
             view.format(rbStruct);
-            view.setGravity(Gravity.RIGHT);
+            wrap_params.gravity = Gravity.LEFT;
+            view.setLayoutParams(wrap_params);
+            view.setBackgroundColor(Color.TRANSPARENT);
             view.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_keyboard_arrow_right_white_36dp), null, null, null);
             addView(view);
         } else if (rbEnum != null) {
             RBEnumSpinner view = new RBEnumSpinner(getContext());
             view.format(rbEnum);
-            view.setGravity(Gravity.RIGHT);
+            wrap_params.gravity = Gravity.RIGHT;
+            view.setLayoutParams(wrap_params);
             addView(view);
         } else {
 
