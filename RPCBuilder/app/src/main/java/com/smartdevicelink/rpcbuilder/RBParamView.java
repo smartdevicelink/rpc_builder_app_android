@@ -77,6 +77,7 @@ public class RBParamView extends LinearLayout {
             view.format(rbParam);
             addView(view);
         } else if (rbStruct != null) {
+            rbStruct.name = rbParam.name;
             RBStructButton view = new RBStructButton(getContext());
             view.format(rbStruct);
             wrap_params.gravity = Gravity.LEFT;

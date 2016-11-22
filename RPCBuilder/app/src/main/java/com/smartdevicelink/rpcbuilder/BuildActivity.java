@@ -12,21 +12,27 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.smartdevicelink.rpcbuilder.SmartDeviceLink.SDLConfiguration;
+import com.smartdevicelink.marshal.JsonRPCMarshaller;
+import com.smartdevicelink.rpcbuilder.SmartDeviceLink.SdlService;
+
+import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
+import java.util.Hashtable;
 
 public class BuildActivity extends AppCompatActivity {
 
     private String filename = "Mobile_API.xml";
-    private SDLConfiguration sdlConfiguration;
     private ParserHandler parserHandler = null;
     private RBFunction rbFunction = null;
     private RBStruct rbStruct = null;
     private RBEnum rbEnum = null;
+
+    public final String LIST_PARAMS_KEY = "LIST_PARAMS";
+    public final String LIST_FUNCS_KEY = "LIST_FUNCS";
+    public final String LIST_STRUCT_PARAMS_KEY = "LIST_STRUCT_PARAMS";
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -40,8 +46,6 @@ public class BuildActivity extends AppCompatActivity {
 
         if(callingActivity.equals("SettingsActivity")){ // Prepare to send RAI, connect to SDL core
 
-            // TODO: Connect to SDl Core
-
             RBFunction RAI_request = null;
             for(RBFunction rb : parserHandler.getRequests()){
                 if(rb.name.equals("RegisterAppInterface") && rb.getFunctionId().equals("RegisterAppInterfaceID"))
@@ -53,7 +57,7 @@ public class BuildActivity extends AppCompatActivity {
                 finish();
             }else{
                 rbFunction = RAI_request;
-                showRBParameterFragment();
+                showFragment(ListParamsFragment.class);
             }
 
         }else{ // Display list of all RPC requests
@@ -68,7 +72,7 @@ public class BuildActivity extends AppCompatActivity {
             filename = intent.getStringExtra("filename");
             String ip_address = intent.getStringExtra("ip_address");
             String port = intent.getStringExtra("port");
-            sdlConfiguration = new SDLConfiguration(ip_address, port);
+            String connectionType = intent.getStringExtra("connectionType");
         }
 
         return intent.getStringExtra("from");
@@ -95,7 +99,6 @@ public class BuildActivity extends AppCompatActivity {
 
     public void OnRequestSelected(RBFunction rb){
         rbFunction = rb;
-
     }
 
     public interface OnFragmentInteractionListener {
@@ -113,69 +116,112 @@ public class BuildActivity extends AppCompatActivity {
 
     public ParserHandler getParserHandler() { return parserHandler; }
 
-    public void showRBStructFragment() {
+    public void addFragment(Class<?> fragment_type) {
         android.app.FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if(rbFunction != null){
-            Fragment fragmentA = fragmentManager.findFragmentByTag("ListRBFuncParams:" + rbFunction.name);
-            if(fragmentA != null)
-                fragmentTransaction.hide(fragmentA);
+        if(fragment_type == ListFuncsFragment.class){
+            ListFuncsFragment fragment = new ListFuncsFragment();
+            fragmentTransaction.add(R.id.activity_build, fragment, LIST_FUNCS_KEY);
+            fragmentTransaction.hide(fragment);
+        }else if(fragment_type == ListParamsFragment.class){
+            if(rbFunction != null){
+                ListParamsFragment fragment = (ListParamsFragment) fragmentManager.findFragmentByTag(LIST_PARAMS_KEY + ":" + rbFunction.name);
+
+                if (fragment == null) {
+                    fragment = new ListParamsFragment();
+                    fragment.setRBFunction(rbFunction);
+                    fragmentTransaction.add(R.id.activity_build, fragment, LIST_PARAMS_KEY + ":" + rbFunction.name);
+                }
+
+                fragmentTransaction.hide(fragment);
+            }
+        }else if(fragment_type == ListStructParamsFragment.class){
+            if(rbStruct != null) {
+                ListStructParamsFragment fragment = (ListStructParamsFragment) fragmentManager.findFragmentByTag(LIST_STRUCT_PARAMS_KEY + ":" + rbStruct.name.toLowerCase());
+
+                if (fragment == null) {
+                    fragment = new ListStructParamsFragment();
+                    fragment.setRBStruct(rbStruct);
+                    fragmentTransaction.add(R.id.activity_build, fragment, LIST_STRUCT_PARAMS_KEY + ":" + rbStruct.name.toLowerCase());
+                }
+
+                fragmentTransaction.hide(fragment);
+            }
+        }else{
+            return; //should not reach here
         }
 
-        if(rbStruct != null) {
-            RBStructFragment fragmentB = (RBStructFragment) fragmentManager.findFragmentByTag("ListRBStructParams:" + rbStruct.name);
+        fragmentTransaction.commit();
+    }
 
-            if (fragmentB == null) {
-                fragmentB = new RBStructFragment();
-                fragmentTransaction.add(R.id.activity_build, fragmentB, "ListRBStructParams:" + rbStruct.name);
+    public void showFragment(Class<?> fragment_type){
+        android.app.FragmentManager fragmentManager = this.getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        if(fragment_type == ListFuncsFragment.class){
+            ListFuncsFragment fragment = new ListFuncsFragment();
+            fragmentTransaction.add(R.id.activity_build, fragment, LIST_FUNCS_KEY);
+            fragmentTransaction.show(fragment);
+        }else if(fragment_type == ListParamsFragment.class){
+            if(rbFunction != null){
+                ListParamsFragment fragment = (ListParamsFragment) fragmentManager.findFragmentByTag(LIST_PARAMS_KEY + ":" + rbFunction.name);
+
+                if (fragment == null) {
+                    fragment = new ListParamsFragment();
+                    fragment.setRBFunction(rbFunction);
+                    fragmentTransaction.add(R.id.activity_build, fragment, LIST_PARAMS_KEY + ":" + rbFunction.name);
+                }
+
+                fragmentTransaction.show(fragment);
             }
+        }else if(fragment_type == ListStructParamsFragment.class){
+            if(rbStruct != null) {
+                ListStructParamsFragment fragment = (ListStructParamsFragment) fragmentManager.findFragmentByTag(LIST_STRUCT_PARAMS_KEY + ":" + rbStruct.name.toLowerCase());
 
-            fragmentTransaction.show(fragmentB);
+                if (fragment == null) {
+                    fragment = new ListStructParamsFragment();
+                    fragment.setRBStruct(rbStruct);
+                    fragmentTransaction.add(R.id.activity_build, fragment, LIST_STRUCT_PARAMS_KEY + ":" + rbStruct.name.toLowerCase());
+                }else{
+                    fragmentTransaction.show(fragment);
+                }
+            }
+        }else{
+            return; //should not reach here
+        }
+
+        fragmentTransaction.commit();
+    }
+
+    public void hideFragment(Fragment fragment){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        if(fragment != null){
+            fragmentTransaction.hide(fragment);
         }
         fragmentTransaction.commit();
     }
 
-    public void showRBParameterFragment(){
+    public void removeFragment(Fragment fragment){
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        RBFuncFragment fragmentA = (RBFuncFragment) fragmentManager.findFragmentByTag("ListRBRequests");
-        if(fragmentA != null)
-            fragmentTransaction.remove(fragmentA);
-
-        if(rbStruct != null) {
-            RBStructFragment fragmentB = (RBStructFragment) fragmentManager.findFragmentByTag("ListRBStructParams:" + rbStruct.name);
-            if(fragmentB != null)
-                fragmentTransaction.hide(fragmentB);
-        }
-
-        if(rbFunction != null){
-            RBParameterFragment fragmentC = (RBParameterFragment) fragmentManager.findFragmentByTag("ListRBFuncParams:" + rbFunction.name);
-
-            if (fragmentC == null) {
-                fragmentC = new RBParameterFragment();
-                fragmentTransaction.add(R.id.activity_build, fragmentC, "ListRBFuncParams:" + rbFunction.name);
-            }
-            
-            fragmentTransaction.show(fragmentC);
+        if(fragment != null){
+            fragmentTransaction.remove(fragment);
         }
         fragmentTransaction.commit();
     }
 
-    public void showRBFuncFragment(){
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        if(rbFunction != null){
-            RBParameterFragment fragmentA = (RBParameterFragment) fragmentManager.findFragmentByTag("ListRBFuncParams:" + rbFunction.name);
-            if(fragmentA != null)
-                fragmentTransaction.remove(fragmentA);
+    public void sendRPCRequest(Hashtable<String,Object> hash){
+        Intent sdlServiceIntent = new Intent(this, SdlService.class);
+        try {
+            sdlServiceIntent.putExtra("sendRPCRequest", JsonRPCMarshaller.serializeHashtable(hash).toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        RBFuncFragment fragmentB = new RBFuncFragment();
-        fragmentTransaction.add(R.id.activity_build, fragmentB, "ListRBRequests");
-        fragmentTransaction.commit();
+        startService(sdlServiceIntent);
     }
 
 }

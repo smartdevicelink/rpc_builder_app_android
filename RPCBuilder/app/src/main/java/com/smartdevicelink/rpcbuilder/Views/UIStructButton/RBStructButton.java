@@ -1,15 +1,16 @@
 package com.smartdevicelink.rpcbuilder.Views.UIStructButton;
 
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 
 import com.smartdevicelink.rpcbuilder.BuildActivity;
+import com.smartdevicelink.rpcbuilder.ListStructParamsFragment;
 import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.RBStruct;
-import com.smartdevicelink.rpcbuilder.RBStructFragment;
 
 /**
  * Created by austinkirk on 11/15/16.
@@ -25,13 +26,17 @@ public class RBStructButton extends Button{
     }
 
     public void format(final RBStruct rbStruct){
+        final BuildActivity buildActivity = ((BuildActivity) mContext);
+        buildActivity.setRBStruct(rbStruct);
+        buildActivity.addFragment(ListStructParamsFragment.class);
+
         this.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
-                ((BuildActivity) mContext).setRBStruct(rbStruct);
-                ((BuildActivity) mContext).showRBStructFragment();
+                buildActivity.hideFragment(buildActivity.getFragmentManager().findFragmentByTag(buildActivity.LIST_PARAMS_KEY + ":" + buildActivity.getRBFunction().name));
+                buildActivity.setRBStruct(rbStruct);
+                buildActivity.showFragment(ListStructParamsFragment.class);
             }
         });
     }

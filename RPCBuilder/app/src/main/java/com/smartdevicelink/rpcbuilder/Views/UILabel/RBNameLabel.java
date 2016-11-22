@@ -35,4 +35,6 @@ public class RBNameLabel extends TextView {
             }
         });
     }
+
+    public Boolean isChecked(){return enabled;}
 }
