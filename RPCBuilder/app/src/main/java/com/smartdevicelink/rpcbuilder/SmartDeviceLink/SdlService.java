@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -120,8 +121,9 @@ import static com.smartdevicelink.proxy.rpc.enums.FileType.JSON;
 
 public class SdlService extends Service implements IProxyListenerALM {
     //The proxy handles communication between the application and SDL
-    String APP_NAME = "RPCBuilder";
-    String IP_ADDRESS_OF_CORE = "192.168.1.91";
+    private String ip_address = "";
+    private String port = "12345";
+    private String connectionType = "TCP";
 
     private SdlProxyALM proxy;
 
@@ -130,6 +132,11 @@ public class SdlService extends Service implements IProxyListenerALM {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean forceConnect = intent !=null && intent.getBooleanExtra(TransportConstants.FORCE_TRANSPORT_CONNECTED, false);
+
+        // Handle incoming intent, grab connection information if it is from BuildActivity
+        handleIncomingIntent(intent);
+
+        // Are we sending an RPC request? If so, grab the Hashtable associated with it
         Hashtable<String, Object> hash = null;
         if(intent.getStringExtra("sendRPCRequest") != null){
             try {
@@ -142,6 +149,7 @@ public class SdlService extends Service implements IProxyListenerALM {
         String name = null;
         Hashtable<String, Object> parameters = null;
 
+        // Specific case to establish proxy when sending first RAI
         if(proxy == null && hash != null) {
             try{
                 if (hash.containsKey("request")) {
@@ -163,7 +171,11 @@ public class SdlService extends Service implements IProxyListenerALM {
 
                             SdlProxyBuilder.Builder sdlProxyBuilder = new SdlProxyBuilder.Builder(this, rai_appID,
                                     rai_appName, rai_isMediaApplication, this);
-                            sdlProxyBuilder.setTransportType(new TCPTransportConfig(12345, IP_ADDRESS_OF_CORE, true));
+
+                            if(connectionType.equals("BT"))
+                                sdlProxyBuilder.setTransportType(new BTTransportConfig(true));
+                            else
+                                sdlProxyBuilder.setTransportType(new TCPTransportConfig(Integer.parseInt(port), ip_address, true));
 
                             if (hash.containsKey(sdlMsgVersion))
                                 sdlProxyBuilder.setSdlMessageVersion(new SdlMsgVersion((Hashtable<String, Object>) hash.get(sdlMsgVersion)));
@@ -204,10 +216,10 @@ public class SdlService extends Service implements IProxyListenerALM {
                 }
             }
         }else{
-            if(forceConnect){
+            if(forceConnect){ //TODO: Check purpose of this
                 proxy.forceOnConnected();
             }
-            if(hash != null) {
+            if(hash != null) { // Proxy is established, sending a general RPC Request
                 try {
                     proxy.sendRPCRequest(new RPCRequest(hash));
                 } catch (SdlException e) {
@@ -218,6 +230,16 @@ public class SdlService extends Service implements IProxyListenerALM {
 
         //use START_STICKY because we want the SDLService to be explicitly started and stopped as needed.
         return START_STICKY;
+    }
+
+    private String handleIncomingIntent(Intent intent){
+        if(intent.getStringExtra("from").equals("BuildActivity")){
+            ip_address = intent.getStringExtra("ip_address");
+            port = intent.getStringExtra("port");
+            connectionType = intent.getStringExtra("connectionType");
+        }
+
+        return intent.getStringExtra("from");
     }
 
     @Override
@@ -249,13 +271,13 @@ public class SdlService extends Service implements IProxyListenerALM {
         stopSelf();
 
         if(reason == SdlDisconnectedReason.LANGUAGE_CHANGE) {
-            //If on Bluetooth
-            //Looper.prepare();
-            //SdlReceiver.queryForConnectedService(this);
-
-            // Else, on TCP
-            Intent sdlServiceIntent = new Intent(this, SdlService.class);
-            startService(sdlServiceIntent);
+            if(connectionType.equals("BT")){ // if on Bluetooth
+                Looper.prepare();
+                SdlReceiver.queryForConnectedService(this);
+            }else{ //else, on TCP
+                Intent sdlServiceIntent = new Intent(this, SdlService.class);
+                startService(sdlServiceIntent);
+            }
         }
     }
 

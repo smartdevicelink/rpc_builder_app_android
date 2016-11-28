@@ -2,7 +2,6 @@
     <string name="app_name">RPC Builder</string>
     <string-array name="connection_methods">
         <item>TCP</item>
-        <item>USB</item>
         <item>BT</item>
     </string-array>
     <string name="RegisterAppInterface">RegisterAppInterface</string>

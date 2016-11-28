@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
+import com.smartdevicelink.protocol.enums.FunctionID;
 import com.smartdevicelink.proxy.RPCMessage;
+import com.smartdevicelink.proxy.RPCRequest;
+import com.smartdevicelink.proxy.rpc.RegisterAppInterface;
 import com.smartdevicelink.rpcbuilder.BuildActivity;
 import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.RBFunction;
@@ -26,6 +29,9 @@ import com.smartdevicelink.rpcbuilder.SmartDeviceLink.SdlService;
 
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -35,6 +41,7 @@ import java.util.Hashtable;
 
 public class ListParamsFragment extends Fragment {
     private RBFunction request;
+    private final String RAI_file = "RAI_file";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +64,10 @@ public class ListParamsFragment extends Fragment {
 
             getActivity().setTitle(request.name);
             setHasOptionsMenu(true);
+
+            if(request.name.equals(FunctionID.REGISTER_APP_INTERFACE.toString())){
+                loadRAI();
+            }
         }
 
         return view;
@@ -81,16 +92,21 @@ public class ListParamsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         BuildActivity buildActivity = (BuildActivity) getActivity();
         buildActivity.setRBFunction(request);
+
+        RBRequestBuilder rbrb = new RBRequestBuilder();
+        Hashtable<String,Object> hash =  rbrb.buildRequest((LinearLayout) getView().findViewById(R.id.param_holder), buildActivity);
+
+        // Save Settings if request == RAI
+        saveRAI(hash);
+
+        // Remove this fragment, go to list of RPC requests
+        buildActivity.hideFragment(this);
+        buildActivity.showFragment(ListFuncsFragment.class);
+
         // handle item selection
         switch (item.getItemId()) {
             case R.id.send:
-                // TODO: User chose the "Send" option, send RPC request
 
-                // Remove this fragment, go to list of RPC requests
-                buildActivity.hideFragment(this);
-                buildActivity.showFragment(ListFuncsFragment.class);
-                RBRequestBuilder rbrb = new RBRequestBuilder();
-                Hashtable<String,Object> hash =  rbrb.buildRequest((LinearLayout) getView().findViewById(R.id.param_holder), buildActivity);
                 try {
                     Log.d("Before", JsonRPCMarshaller.serializeHashtable(hash).toString(1));
                 } catch (JSONException e) {
@@ -102,8 +118,6 @@ public class ListParamsFragment extends Fragment {
 
             case R.id.back:
                 // Remove and hide this fragment, go back to list of requests (RBfunctions)
-                buildActivity.hideFragment(this);
-                buildActivity.showFragment(ListFuncsFragment.class);
                 return true;
 
             default:
@@ -112,6 +126,43 @@ public class ListParamsFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void saveRAI(Hashtable<String,Object> hash){
+        if(request.name.equals(FunctionID.REGISTER_APP_INTERFACE.toString())){
+            String data = null;
+            FileOutputStream outputStream = null;
+
+            try {
+                File file = new File(getActivity().getFilesDir(), RAI_file);
+                outputStream = new FileOutputStream(file, false); // will overwrite existing data
+
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                data = JsonRPCMarshaller.serializeHashtable(hash).toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                outputStream.write(data.getBytes());
+                outputStream.flush();
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void loadRAI(){
+
     }
 
 }

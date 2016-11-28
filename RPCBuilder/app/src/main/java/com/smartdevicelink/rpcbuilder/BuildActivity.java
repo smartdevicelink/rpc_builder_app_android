@@ -25,6 +25,10 @@ import java.util.Hashtable;
 public class BuildActivity extends AppCompatActivity {
 
     private String filename = "Mobile_API.xml";
+    private String ip_address = "";
+    private String port = "12345";
+    private String connectionType = "TCP";
+
     private ParserHandler parserHandler = null;
     private RBFunction rbFunction = null;
     private RBStruct rbStruct = null;
@@ -41,11 +45,12 @@ public class BuildActivity extends AppCompatActivity {
         setContentView(R.layout.activity_build);
 
         String callingActivity = null;
-        callingActivity = handleIntent(getIntent());
+        callingActivity = handleIncomingIntent(getIntent()); //Handle incoming intent, grab connection information if it is from SettingsActivity
         parserHandler = parseXML();
 
         if(callingActivity.equals("SettingsActivity")){ // Prepare to send RAI, connect to SDL core
 
+            // Loop through parsed XML looking for RAI request
             RBFunction RAI_request = null;
             for(RBFunction rb : parserHandler.getRequests()){
                 if(rb.name.equals("RegisterAppInterface") && rb.getFunctionId().equals("RegisterAppInterfaceID"))
@@ -56,8 +61,8 @@ public class BuildActivity extends AppCompatActivity {
                 Toast.makeText(this, "No RegisterAppInterface in XML file", Toast.LENGTH_SHORT);
                 finish();
             }else{
-                rbFunction = RAI_request;
-                showFragment(ListParamsFragment.class);
+                rbFunction = RAI_request; // Set the current function to be RAI
+                showFragment(ListParamsFragment.class); // Show the parameters for RAI
             }
 
         }else{ // Display list of all RPC requests
@@ -65,17 +70,25 @@ public class BuildActivity extends AppCompatActivity {
         }
     }
 
-    // handles extras in intent sent from SettingsActivity
+    // handles extras in Intent sent from SettingsActivity
     // always returns String of name of activity that called it
-    private String handleIntent(Intent intent){
+    private String handleIncomingIntent(Intent intent){
         if(intent.getStringExtra("from").equals("SettingsActivity")){
             filename = intent.getStringExtra("filename");
-            String ip_address = intent.getStringExtra("ip_address");
-            String port = intent.getStringExtra("port");
-            String connectionType = intent.getStringExtra("connectionType");
+            ip_address = intent.getStringExtra("ip_address");
+            port = intent.getStringExtra("port");
+            connectionType = intent.getStringExtra("connectionType");
         }
 
         return intent.getStringExtra("from");
+    }
+
+    private Intent handleOutgoingIntent(Intent intent){
+        intent.putExtra("from", "BuildActivity");
+        intent.putExtra("ip_address", ip_address);
+        intent.putExtra("port", port);
+        intent.putExtra("connectionType", connectionType);
+        return intent;
     }
 
     private ParserHandler parseXML(){
@@ -116,6 +129,7 @@ public class BuildActivity extends AppCompatActivity {
 
     public ParserHandler getParserHandler() { return parserHandler; }
 
+    // Adds a hidden Fragment to the current Activity
     public void addFragment(Class<?> fragment_type) {
         android.app.FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -155,6 +169,7 @@ public class BuildActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    // Shows a Fragment that may or may not have been previously added to Activity
     public void showFragment(Class<?> fragment_type){
         android.app.FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -218,6 +233,7 @@ public class BuildActivity extends AppCompatActivity {
         Intent sdlServiceIntent = new Intent(this, SdlService.class);
         try {
             sdlServiceIntent.putExtra("sendRPCRequest", JsonRPCMarshaller.serializeHashtable(hash).toString());
+            handleOutgoingIntent(sdlServiceIntent);
         } catch (JSONException e) {
             e.printStackTrace();
         }
