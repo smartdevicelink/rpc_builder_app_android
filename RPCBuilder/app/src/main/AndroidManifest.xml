@@ -7,15 +7,16 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Activities.SettingsActivity" android:label="RPC Builder">
+        android:theme="@style/AppTheme"
+        >
+        <activity android:name=".Activities.SettingsActivity" android:label="RPC Builder" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.BuildActivity" android:label="RPC Builder">
+        <activity android:name=".Activities.BuildActivity" android:label="RPC Builder" android:screenOrientation="portrait">
         </activity>
         <service
             android:name=".SmartDeviceLink.SdlService"

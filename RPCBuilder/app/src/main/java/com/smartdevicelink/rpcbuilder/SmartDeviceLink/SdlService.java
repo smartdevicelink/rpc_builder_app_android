@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.smartdevicelink.exception.SdlException;
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
@@ -112,6 +113,7 @@ import static com.smartdevicelink.proxy.constants.Names.languageDesired;
 import static com.smartdevicelink.proxy.constants.Names.ngnMediaScreenAppName;
 import static com.smartdevicelink.proxy.constants.Names.sdlMsgVersion;
 import static com.smartdevicelink.proxy.constants.Names.ttsName;
+import static com.smartdevicelink.proxy.constants.Names.type;
 import static com.smartdevicelink.proxy.constants.Names.vrSynonyms;
 import static com.smartdevicelink.proxy.rpc.enums.FileType.JSON;
 
@@ -246,6 +248,7 @@ public class SdlService extends Service implements IProxyListenerALM {
     @Override
     public void onDestroy() {
         //Dispose of the proxy
+
         if (proxy != null) {
             try {
                 proxy.dispose();
@@ -599,6 +602,7 @@ public class SdlService extends Service implements IProxyListenerALM {
         switch(notification.getHmiLevel()) {
             case HMI_FULL:
                 //send welcome message, addcommands, subscribe to buttons ect
+                Toast.makeText(getApplicationContext(), "Connected to Core.", Toast.LENGTH_SHORT).show();
                 break;
             case HMI_LIMITED:
                 break;

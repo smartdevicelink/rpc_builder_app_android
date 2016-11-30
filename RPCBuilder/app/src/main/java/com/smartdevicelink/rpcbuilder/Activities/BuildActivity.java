@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -33,6 +34,8 @@ import java.io.InputStream;
 import java.util.Hashtable;
 
 public class BuildActivity extends AppCompatActivity {
+
+    private Fragment currentFragment; // to Save on orientation Change
 
     private String filename = "Mobile_API.xml";
     private String ip_address = "";
@@ -80,6 +83,13 @@ public class BuildActivity extends AppCompatActivity {
         }else{ // Display list of all RPC requests
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent sdlServiceIntent = new Intent(this, SdlService.class);
+        stopService(sdlServiceIntent);
+        super.onDestroy();
     }
 
     // handles extras in Intent sent from SettingsActivity
@@ -252,4 +262,9 @@ public class BuildActivity extends AppCompatActivity {
         startService(sdlServiceIntent);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+    }
 }

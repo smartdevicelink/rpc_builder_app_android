@@ -41,6 +41,8 @@ public class ListFuncsFragment extends Fragment {
         requests = buildActivity.getParserHandler().getRequests();
         buildActivity.setTitle("RPC Requests");
 
+        setRetainInstance(true);//make retainable
+
         if(!requests.isEmpty()){
             LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.param_holder);
 

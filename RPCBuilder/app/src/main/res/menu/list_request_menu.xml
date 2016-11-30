@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/back"
-        android:icon="@drawable/ic_subdirectory_arrow_left_white_36dp"
-        android:title="Next"
+        android:icon="@drawable/ic_settings_white_36dp"
+        android:title="Settings"
         app:showAsAction="ifRoom"/>
 
 </menu>
