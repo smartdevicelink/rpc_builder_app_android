@@ -4,12 +4,10 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.smartdevicelink.rpcbuilder.RBElement;
-import com.smartdevicelink.rpcbuilder.RBEnum;
+import com.smartdevicelink.rpcbuilder.DataModels.RBElement;
+import com.smartdevicelink.rpcbuilder.DataModels.RBEnum;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Created by austinkirk on 11/16/16.

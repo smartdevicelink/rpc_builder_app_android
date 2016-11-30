@@ -1,16 +1,13 @@
 package com.smartdevicelink.rpcbuilder.Views.UIStructButton;
 
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 
-import com.smartdevicelink.rpcbuilder.BuildActivity;
-import com.smartdevicelink.rpcbuilder.ListStructParamsFragment;
-import com.smartdevicelink.rpcbuilder.R;
-import com.smartdevicelink.rpcbuilder.RBStruct;
+import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
+import com.smartdevicelink.rpcbuilder.Fragments.ListStructParamsFragment;
+import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
 
 /**
  * Created by austinkirk on 11/15/16.

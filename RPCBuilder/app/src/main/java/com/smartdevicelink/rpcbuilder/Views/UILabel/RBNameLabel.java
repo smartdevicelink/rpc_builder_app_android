@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
-import com.smartdevicelink.rpcbuilder.RBParam;
+import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
 
 /**
  * Created by austinkirk on 11/16/16.

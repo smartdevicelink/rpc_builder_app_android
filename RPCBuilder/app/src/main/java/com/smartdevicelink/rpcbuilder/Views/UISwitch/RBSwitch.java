@@ -1,14 +1,10 @@
 package com.smartdevicelink.rpcbuilder.Views.UISwitch;
 
 import android.content.Context;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.Spanned;
-import android.widget.EditText;
 import android.widget.Switch;
 
-import com.smartdevicelink.rpcbuilder.RBBaseObject;
-import com.smartdevicelink.rpcbuilder.RBParam;
+import com.smartdevicelink.rpcbuilder.DataModels.RBBaseObject;
+import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
 
 /**
  * Created by austinkirk on 11/15/16.

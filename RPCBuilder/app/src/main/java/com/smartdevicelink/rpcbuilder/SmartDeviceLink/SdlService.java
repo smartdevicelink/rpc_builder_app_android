@@ -224,6 +224,7 @@ public class SdlService extends Service implements IProxyListenerALM {
                     proxy.sendRPCRequest(new RPCRequest(hash));
                 } catch (SdlException e) {
                     e.printStackTrace();
+                    proxy = null;
                 }
             }
         }

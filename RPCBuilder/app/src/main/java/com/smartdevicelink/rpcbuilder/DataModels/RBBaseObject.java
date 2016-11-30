@@ -1,4 +1,4 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.DataModels;
 
 import android.util.Log;
 
@@ -33,7 +33,7 @@ public class RBBaseObject {
     public static String RBMessageTypeKey = "messagetype";
     
     public String name = null;
-    public String description = null;
+    public String objectDescription = null;
     public final Map<String, String> properties = new HashMap<String, String>();
 
     public RBBaseObject(Attributes attributes) {
@@ -47,7 +47,7 @@ public class RBBaseObject {
             return;
         }
         string = string.replaceAll("\\s{2,}", "");
-        description = description.concat(string);
+        objectDescription = objectDescription.concat(string);
     }
 
     protected void handle(String key, String value) {

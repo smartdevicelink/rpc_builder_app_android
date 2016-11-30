@@ -1,8 +1,6 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.Fragments;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,13 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
+
+import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
+import com.smartdevicelink.rpcbuilder.DataModels.RBFunction;
+import com.smartdevicelink.rpcbuilder.R;
+import com.smartdevicelink.rpcbuilder.Views.RBFuncView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -32,34 +35,17 @@ public class ListFuncsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.list_request_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_param, container, false);
 
         final BuildActivity buildActivity = (BuildActivity) getActivity();
         requests = buildActivity.getParserHandler().getRequests();
-        buildActivity.setTitle(R.string.app_name);
+        buildActivity.setTitle("RPC Requests");
 
         if(!requests.isEmpty()){
-            final ArrayList<String> arrayList = new ArrayList<String>();
-            for(RBFunction req : requests){
-                arrayList.add(req.name);
-            }
-            //Sort into alphabetical order
-            Collections.sort(arrayList);
-            ArrayAdapter<String> listArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, arrayList);
-            ListView requestList = (ListView) view.findViewById(R.id.request_list);
-            requestList.setAdapter(listArrayAdapter);
-            requestList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    for(RBFunction rb : buildActivity.getParserHandler().getRequests()){
-                        if(rb.name.equals(arrayList.get(i))){
-                            buildActivity.removeFragment(buildActivity.getFragmentManager().findFragmentByTag(buildActivity.LIST_FUNCS_KEY));
-                            buildActivity.setRBFunction(rb);
-                            buildActivity.showFragment(ListParamsFragment.class);
-                        }
-                    }
-                }
-            });
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.param_holder);
+
+            RBFuncView rbFuncView = new RBFuncView(getActivity());
+            linearLayout.addView(rbFuncView.setFuncs(requests));
 
             setHasOptionsMenu(true);
         }

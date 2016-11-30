@@ -1,10 +1,6 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.Fragments;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,22 +13,22 @@ import android.widget.LinearLayout;
 
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
 import com.smartdevicelink.protocol.enums.FunctionID;
-import com.smartdevicelink.proxy.RPCMessage;
-import com.smartdevicelink.proxy.RPCRequest;
-import com.smartdevicelink.proxy.rpc.RegisterAppInterface;
-import com.smartdevicelink.rpcbuilder.BuildActivity;
+import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
+import com.smartdevicelink.rpcbuilder.DataModels.RBFunction;
+import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
 import com.smartdevicelink.rpcbuilder.R;
-import com.smartdevicelink.rpcbuilder.RBFunction;
-import com.smartdevicelink.rpcbuilder.RBParam;
-import com.smartdevicelink.rpcbuilder.RBParamView;
-import com.smartdevicelink.rpcbuilder.SmartDeviceLink.SdlService;
+import com.smartdevicelink.rpcbuilder.Views.RBParamView;
+import com.smartdevicelink.rpcbuilder.DataModels.RBRequestBuilder;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.Arrays;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Hashtable;
 
 /**
@@ -66,7 +62,7 @@ public class ListParamsFragment extends Fragment {
             setHasOptionsMenu(true);
 
             if(request.name.equals(FunctionID.REGISTER_APP_INTERFACE.toString())){
-                loadRAI();
+                loadRAI(linearLayout);
             }
         }
 
@@ -161,8 +157,39 @@ public class ListParamsFragment extends Fragment {
 
     }
 
-    private void loadRAI(){
+    private void loadRAI(LinearLayout linearLayout){
+        File file = new File(getActivity().getFilesDir(), RAI_file);
+        String data = null;
+        BufferedReader br = null;
+        if(!file.exists())
+            return;
+        try {
+            br = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
 
+            while (line != null) {
+                sb.append(line);
+                line = br.readLine();
+            }
+            data = sb.toString();
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(data != null){
+            RBRequestBuilder rbrb = new RBRequestBuilder();
+            try {
+                rbrb.setRAIfields(linearLayout, (BuildActivity) getActivity(),  JsonRPCMarshaller.deserializeJSONObject(new JSONObject(data)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

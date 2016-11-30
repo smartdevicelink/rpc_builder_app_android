@@ -1,17 +1,15 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.DataModels;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 
-import com.smartdevicelink.proxy.RPCMessage;
 import com.smartdevicelink.proxy.RPCRequest;
-import com.smartdevicelink.proxy.RPCStruct;
-import com.smartdevicelink.proxy.SdlProxyBase;
-import com.smartdevicelink.proxy.rpc.RegisterAppInterface;
+import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
+import com.smartdevicelink.rpcbuilder.Fragments.ListStructParamsFragment;
+import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.Views.UIEnumSpinner.RBEnumSpinner;
 import com.smartdevicelink.rpcbuilder.Views.UILabel.RBNameLabel;
 import com.smartdevicelink.rpcbuilder.Views.UIStructButton.RBStructButton;
@@ -103,11 +101,15 @@ public class RBRequestBuilder {
     //TODO: allow this function to set values for Views in LinearLayouts
     public void setRAIfields(LinearLayout list, Activity buildActivity, Hashtable<String, Object> hash){
         Hashtable<String, Object> parameter_table = (Hashtable<String, Object>) ((Hashtable<String, Object>) hash.get(RPCRequest.KEY_REQUEST)).get(RPCRequest.KEY_PARAMETERS);
+        setRAIfields_helper(list, buildActivity, parameter_table);
+    }
+
+    private void setRAIfields_helper(LinearLayout list, Activity buildActivity, Hashtable<String, Object> hash){
         for(int i = 0; i < list.getChildCount(); i++){
             LinearLayout parameter = (LinearLayout) list.getChildAt(i);
 
             String name = "no_name_parameter";
-            Object value = "null";
+            Object value = null;
 
             for(int j = 0; j < parameter.getChildCount(); j++){
                 View v = parameter.getChildAt(j);
@@ -116,31 +118,29 @@ public class RBRequestBuilder {
                         name = ((RBNameLabel) v).getText().toString();
                         if(name.contains("*"))
                             name = name.substring(0, name.lastIndexOf("*"));
-                        if(!((RBNameLabel) v).isChecked())
-                            name = KEY_DISABLED;
-
+                        if(hash.containsKey(name)){
+                            value = hash.get(name);
+                        }
                     }
                 }else {
                     if (v instanceof RBParamTextField) {
-                        value = ((RBParamTextField) v).getText().toString();
+                        ((RBParamTextField) v).setText((String) value);
                     } else if (v instanceof RBSwitch) {
-                        value = ((RBSwitch) v).isChecked();
+                        ((RBSwitch) v).setChecked((Boolean) value);
                     } else if (v instanceof RBStructButton) {
                         FragmentManager fragmentManager =  ((BuildActivity) buildActivity).getFragmentManager();
                         ListStructParamsFragment structFragment = (ListStructParamsFragment) fragmentManager.findFragmentByTag(((BuildActivity) buildActivity).LIST_STRUCT_PARAMS_KEY + ":" + name.toLowerCase());
                         if(structFragment != null){
-                            value = buildFields( (LinearLayout) structFragment.getView().findViewById(R.id.param_holder), buildActivity);
+                            setRAIfields_helper( (LinearLayout) structFragment.getView().findViewById(R.id.param_holder), buildActivity, (Hashtable<String, Object>) value);
                         }else{
                             value = "I am a struct.";
                         }
                     } else if (v instanceof RBEnumSpinner) {
-                        value = ((RBEnumSpinner) v).getSelectedItem().toString();
+                        String val = (String) value;
+                        ((RBEnumSpinner) v).setSelection( ((ArrayAdapter<String>) ((RBEnumSpinner) v).getAdapter()).getPosition(((String) value)));
                     }
                 }
             }
-
-            if(!value.toString().equals("") && !name.equals(KEY_DISABLED))
-                parameter_table.put(name, value);
         }
     }
 }

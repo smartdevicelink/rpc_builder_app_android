@@ -1,9 +1,8 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.Activities;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -13,10 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import com.smartdevicelink.rpcbuilder.R;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -25,6 +23,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
+
+        setTitle("Settings");
 
         AssetManager assetManager = getAssets();
         ArrayList<String> spec_files = new ArrayList<String>();

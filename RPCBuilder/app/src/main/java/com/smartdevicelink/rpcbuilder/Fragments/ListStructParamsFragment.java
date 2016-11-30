@@ -1,9 +1,6 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.Fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,19 +8,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
-import com.smartdevicelink.rpcbuilder.BuildActivity;
-import com.smartdevicelink.rpcbuilder.Parser;
+import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
+import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
+import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
 import com.smartdevicelink.rpcbuilder.R;
-import com.smartdevicelink.rpcbuilder.RBFunction;
-import com.smartdevicelink.rpcbuilder.RBParam;
-import com.smartdevicelink.rpcbuilder.RBParamView;
-import com.smartdevicelink.rpcbuilder.RBStruct;
-
-import org.xml.sax.helpers.DefaultHandler;
+import com.smartdevicelink.rpcbuilder.Views.RBParamView;
 
 /**
  * Created by austinkirk on 11/15/16.

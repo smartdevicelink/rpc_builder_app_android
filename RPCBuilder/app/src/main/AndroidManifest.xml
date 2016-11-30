@@ -8,14 +8,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingsActivity" android:label="RPC Builder">
+        <activity android:name=".Activities.SettingsActivity" android:label="RPC Builder">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BuildActivity" android:label="RPC Builder">
+        <activity android:name=".Activities.BuildActivity" android:label="RPC Builder">
         </activity>
         <service
             android:name=".SmartDeviceLink.SdlService"
@@ -23,5 +23,6 @@
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
 
 </manifest>

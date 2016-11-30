@@ -1,4 +1,4 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.DataModels;
 
 import org.xml.sax.Attributes;
 

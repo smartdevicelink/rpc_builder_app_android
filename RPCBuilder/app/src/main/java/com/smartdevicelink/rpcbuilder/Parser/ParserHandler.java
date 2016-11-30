@@ -1,46 +1,23 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.Parser;
 
 import android.util.Log;
 
+import com.smartdevicelink.rpcbuilder.DataModels.RBBaseObject;
+import com.smartdevicelink.rpcbuilder.DataModels.RBElement;
+import com.smartdevicelink.rpcbuilder.DataModels.RBEnum;
+import com.smartdevicelink.rpcbuilder.DataModels.RBFunction;
+import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
+import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
+
 import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.InputStream;
-import java.sql.Struct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-/**
- * Created by amulle19 on 10/25/16.
- */
-
-public class Parser {
-    private XMLReader mXmlReader;
-    private ParserHandler mParserHandler;
-
-    public void parse(InputStream inputStream) throws Exception {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser parser = factory.newSAXParser();
-        mXmlReader = parser.getXMLReader();
-        mParserHandler  = new ParserHandler();
-        mXmlReader.setContentHandler(mParserHandler);
-
-        mXmlReader.parse(new InputSource(inputStream));
-    }
-
-    public ParserHandler getParserHandler(){
-        return mParserHandler;
-    }
-}
-
-class ParserHandler extends DefaultHandler {
+public class ParserHandler extends DefaultHandler {
 
     private static final String DescriptionKey = "description";
     private static final String DesignDescriptionKey = "designdescription";
@@ -57,7 +34,7 @@ class ParserHandler extends DefaultHandler {
 
     private String mCurrentTag;
 
-    private Vector<RBBaseObject> mTagsContainer = new Vector<RBBaseObject>();
+    private Vector<Object> mTagsContainer = new Vector<Object>();
 
     private Vector<RBElement> mElementsContainer = new Vector<RBElement>();
     public Vector<RBElement> getElements() {
@@ -84,7 +61,7 @@ class ParserHandler extends DefaultHandler {
 
     @Override
     public void startDocument() throws SAXException {
-        mTagsContainer = new Vector<RBBaseObject>();
+        mTagsContainer = new Vector<Object>();
         mElementsContainer = new Vector<RBElement>();
         mRequestsContainer = new Vector<RBFunction>();
         mResponsesContainer = new Vector<RBFunction>();
@@ -118,7 +95,6 @@ class ParserHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (localName.equals(InterfaceKey)
-                || localName.equals(DescriptionKey)
                 || localName.equals(DesignDescriptionKey)
                 || localName.equals(IssueKey)
                 || localName.equals(TodoKey)) {
@@ -127,27 +103,30 @@ class ParserHandler extends DefaultHandler {
 
         mCurrentTag = null;
 
-        RBBaseObject lastObject = mTagsContainer.lastElement();
+        Object lastObject = mTagsContainer.lastElement();
         mTagsContainer.removeElement(lastObject);
 
-        if (localName.equals(EnumKey)) {
-            RBEnum enumObj = (RBEnum)lastObject;
-            mEnumsDictionary.put(enumObj.name, enumObj);
-            return;
-        } else if (localName.equals(FunctionKey)) {
-            RBFunction functionObj = (RBFunction)lastObject;
-            if (functionObj.getMessageType().equals("request")) {
-                mRequestsContainer.add(functionObj);
-            } else if (functionObj.getMessageType().equals("response")) {
-                mResponsesContainer.add(functionObj);
+        if(lastObject.getClass() != String.class) {
+
+            if (localName.equals(EnumKey)) {
+                RBEnum enumObj = (RBEnum) lastObject;
+                mEnumsDictionary.put(enumObj.name, enumObj);
+                return;
+            } else if (localName.equals(FunctionKey)) {
+                RBFunction functionObj = (RBFunction) lastObject;
+                if (functionObj.getMessageType().equals("request")) {
+                    mRequestsContainer.add(functionObj);
+                } else if (functionObj.getMessageType().equals("response")) {
+                    mResponsesContainer.add(functionObj);
+                }
+                mFunctionsContainer.add(functionObj);
+            } else if (localName.equals(StructKey)) {
+                RBStruct structObj = (RBStruct) lastObject;
+                mStructsDictionary.put(structObj.name, structObj);
+            } else if (localName.equals(ElementKey)) {
+                RBElement elementObj = (RBElement) lastObject;
+                mElementsContainer.add(elementObj);
             }
-            mFunctionsContainer.add(functionObj);
-        } else if (localName.equals(StructKey)) {
-            RBStruct structObj = (RBStruct)lastObject;
-            mStructsDictionary.put(structObj.name, structObj);
-        } else if (localName.equals(ElementKey)) {
-            RBElement elementObj = (RBElement)lastObject;
-            mElementsContainer.add(elementObj);
         }
 
         if (mTagsContainer.size() > 0) {
@@ -170,6 +149,9 @@ class ParserHandler extends DefaultHandler {
         if (text.length() == 0) {
             return;
         }
+
+        if(mCurrentTag.equals(DescriptionKey))
+            mTagsContainer.add(text);
         Log.d("Characters", "Text: " + text);
     }
 
@@ -179,14 +161,17 @@ class ParserHandler extends DefaultHandler {
             if (parent.getClass() == String.class) {
                 String parentString = (String)parent;
                 mTagsContainer.remove(parent);
-                String newString = parentString.concat(objectString);
+                String newString = parentString.concat(" "+objectString);
                 addObjectToParent(newString, mTagsContainer.lastElement());
             } else if (parent.getClass() == RBElement.class) {
                 RBElement elementObj = (RBElement)parent;
-                elementObj.appendDescription(objectString);
+                elementObj.objectDescription = objectString;
             } else if (parent.getClass() == RBEnum.class) {
                 RBEnum enumObj = (RBEnum)parent;
-                enumObj.appendDescription(objectString);
+                enumObj.objectDescription = objectString;
+            } else if (parent.getClass() == RBFunction.class){
+                RBFunction funcObj = (RBFunction) parent;
+                funcObj.objectDescription = objectString;
             }
         } else if (object.getClass() == RBElement.class) {
             if (parent.getClass() == RBEnum.class

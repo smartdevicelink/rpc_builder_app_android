@@ -1,6 +1,4 @@
-package com.smartdevicelink.rpcbuilder;
-
-import android.util.Log;
+package com.smartdevicelink.rpcbuilder.DataModels;
 
 import org.xml.sax.Attributes;
 

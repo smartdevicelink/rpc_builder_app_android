@@ -1,4 +1,4 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.Activities;
 
 import android.annotation.TargetApi;
 
@@ -10,9 +10,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
+import com.smartdevicelink.rpcbuilder.DataModels.RBEnum;
+import com.smartdevicelink.rpcbuilder.DataModels.RBFunction;
+import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
+import com.smartdevicelink.rpcbuilder.Fragments.ListFuncsFragment;
+import com.smartdevicelink.rpcbuilder.Fragments.ListParamsFragment;
+import com.smartdevicelink.rpcbuilder.Fragments.ListStructParamsFragment;
+import com.smartdevicelink.rpcbuilder.Parser.Parser;
+import com.smartdevicelink.rpcbuilder.Parser.ParserHandler;
+import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.SmartDeviceLink.SdlService;
 
 import org.json.JSONException;
@@ -43,6 +53,8 @@ public class BuildActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_build);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); // Line for making sure EditText is not entered unless explicitly clicked on
 
         String callingActivity = null;
         callingActivity = handleIncomingIntent(getIntent()); //Handle incoming intent, grab connection information if it is from SettingsActivity

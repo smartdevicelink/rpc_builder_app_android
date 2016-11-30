@@ -1,19 +1,18 @@
-package com.smartdevicelink.rpcbuilder;
+package com.smartdevicelink.rpcbuilder.Views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 
+import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
+import com.smartdevicelink.rpcbuilder.DataModels.RBBaseObject;
+import com.smartdevicelink.rpcbuilder.DataModels.RBEnum;
+import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
+import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
+import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.Views.UIEnumSpinner.RBEnumSpinner;
 import com.smartdevicelink.rpcbuilder.Views.UILabel.RBNameLabel;
 import com.smartdevicelink.rpcbuilder.Views.UIStructButton.RBStructButton;

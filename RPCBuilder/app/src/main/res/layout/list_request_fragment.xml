@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/list_request_frame"
     >
 
-    <ListView
-        android:orientation="vertical"
-        android:id="@+id/request_list"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:id="@+id/list_request_scroller"></ScrollView>
 
 </FrameLayout>
