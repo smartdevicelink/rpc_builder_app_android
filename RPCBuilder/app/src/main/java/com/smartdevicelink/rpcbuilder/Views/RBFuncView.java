@@ -80,7 +80,7 @@ public class RBFuncView extends LinearLayout {
         layout_params.gravity = Gravity.LEFT;
         imageView.setLayoutParams(layout_params);
 
-        imageView.setImageDrawable(getResources().getDrawable(determineIcon(rbf.name)));
+        imageView.setImageDrawable(getResources().getDrawable(rbf.image()));
         innerLayout.addView(imageView);
 
         // add TextView depending on function name and set OnClickListener to remove current ListFuncsFragment and show ListParamsFragment for chosen function
@@ -129,40 +129,6 @@ public class RBFuncView extends LinearLayout {
         innerLayout.addView(imageButton);
 
         return innerLayout;
-    }
-
-    private String[] UIFunctionNames = {
-            "Show",
-            "SendLocation",
-            "Slider",
-            "Speak",
-            "PerformInteraction",
-            "PerformAudioPassThru",
-            "ScrollableMessage"
-    };
-
-    private int determineIcon(String name){
-        int drawable_id = R.drawable.other_2x;
-        if(name.startsWith("Add") || name.startsWith("Create")){
-            drawable_id = R.drawable.add_2x;
-        }else if(name.startsWith("Delete")){
-            drawable_id = R.drawable.delete_2x;
-        }else if(name.startsWith("Subscribe")){
-            drawable_id = R.drawable.subscribe_2x;
-        }else if(name.startsWith("Un")){
-            drawable_id = R.drawable.unsubscribe_2x;
-        }else if(name.startsWith("Set") || name.startsWith("Alert")){
-            drawable_id = R.drawable.ui_2x;
-        }else{
-            for(String UIFunction : UIFunctionNames){
-                if(UIFunction.contains(name)){
-                    drawable_id = R.drawable.ui_2x;
-                    return drawable_id;
-                }
-            }
-        }
-
-        return drawable_id;
     }
 }
 

@@ -25,30 +25,12 @@ import com.smartdevicelink.rpcbuilder.Views.UITextField.RBParamTextField;
 
 public class RBParamView extends LinearLayout {
     private RBParam rbParam;
-    private String attr_name;
-    private String attr_type;
     private LinearLayout.LayoutParams wrap_params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     private LinearLayout.LayoutParams match_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
 
     public RBParamView(Context context){
         super(context);
-    }
-
-    public RBParamView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        TypedArray a = context.getTheme().obtainStyledAttributes(
-                attrs,
-                R.styleable.RBParamView,
-                0, 0);
-
-        try {
-            attr_name = a.getString(R.styleable.RBParamView_pName);
-            attr_type = a.getString(R.styleable.RBParamView_pType);
-            //rbParam. = a.getString(R.styleable.RBParamView_pValue); Currently not  used
-        } finally {
-            a.recycle();
-        }
     }
 
     public void addParam(RBParam rbp){

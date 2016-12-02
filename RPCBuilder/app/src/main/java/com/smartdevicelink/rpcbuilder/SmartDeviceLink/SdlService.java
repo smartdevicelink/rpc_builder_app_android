@@ -123,9 +123,12 @@ import static com.smartdevicelink.proxy.rpc.enums.FileType.JSON;
 
 public class SdlService extends Service implements IProxyListenerALM {
     //The proxy handles communication between the application and SDL
+    public final static String CONNECTION_NOTIFICATION_ACTION = "CONNECTION_ACTION";
     private String ip_address = "";
     private String port = "12345";
     private String connectionType = "TCP";
+    private Boolean first_HMI_NONE = true;
+    private Boolean connectionEstablished = false;
 
     private SdlProxyALM proxy;
 
@@ -602,22 +605,27 @@ public class SdlService extends Service implements IProxyListenerALM {
         switch(notification.getHmiLevel()) {
             case HMI_FULL:
                 //send welcome message, addcommands, subscribe to buttons ect
-                Toast.makeText(getApplicationContext(), "Connected to Core.", Toast.LENGTH_SHORT).show();
                 break;
             case HMI_LIMITED:
                 break;
             case HMI_BACKGROUND:
                 break;
             case HMI_NONE:
+                if(first_HMI_NONE){
+                    first_HMI_NONE = false;
+                    connectionEstablished = true;
+
+                    //Toast.makeText(getApplicationContext(), "Connected to Core.", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent();
+                    intent.setAction(CONNECTION_NOTIFICATION_ACTION);
+                    intent.putExtra("connectionEstablished", connectionEstablished.toString());
+                    sendBroadcast(intent);
+                }
                 break;
             default:
                 return;
         }
     }
-
-    public SdlProxyALM getProxy(){
-        return proxy;
-    }
-
     //...
 }

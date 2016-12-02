@@ -66,6 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         connectionSpinner.setAdapter(cs_adapter);
         fileSpinner.setAdapter(fs_adapter);
+
         loadSettings();
     }
 
@@ -93,6 +94,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         EditText port_et = (EditText) findViewById(R.id.port);
         port = port_et.getText().toString();
+
+        saveSettings();
 
         Intent intent = new Intent(this, BuildActivity.class);
         intent.putExtra("from", "SettingsActivity");

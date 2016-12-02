@@ -32,7 +32,6 @@ public class RBRequestBuilder {
     public RBRequestBuilder(){}
 
     public Hashtable<String, Object> buildRequest(LinearLayout parameterList, Activity buildActivity){
-
         Hashtable<String, Object> parameter_table = buildFields(parameterList, buildActivity);
 
         Hashtable<String, Object> function_table = new Hashtable<String, Object>();
@@ -57,11 +56,12 @@ public class RBRequestBuilder {
 
     private Hashtable<String, Object> buildFields(LinearLayout list, Activity buildActivity){
         Hashtable<String, Object> parameter_table = new Hashtable<String, Object>();
+
         for(int i = 0; i < list.getChildCount(); i++){
             LinearLayout parameter = (LinearLayout) list.getChildAt(i);
 
             String name = "no_name_parameter";
-            Object value = "null";
+            Object value = null;
 
             for(int j = 0; j < parameter.getChildCount(); j++){
                 View v = parameter.getChildAt(j);
@@ -83,8 +83,6 @@ public class RBRequestBuilder {
                         ListStructParamsFragment structFragment = (ListStructParamsFragment) fragmentManager.findFragmentByTag(((BuildActivity) buildActivity).LIST_STRUCT_PARAMS_KEY + ":" + name.toLowerCase());
                         if(structFragment != null){
                             value = buildFields( (LinearLayout) structFragment.getView().findViewById(R.id.param_holder), buildActivity);
-                        }else{
-                            value = "I am a struct.";
                         }
                     } else if (v instanceof RBEnumSpinner) {
                         value = ((RBEnumSpinner) v).getSelectedItem().toString();
@@ -92,13 +90,15 @@ public class RBRequestBuilder {
                 }
             }
 
-            if(!value.toString().equals("") && !name.equals(KEY_DISABLED))
+            if(value!=null && !name.equals(KEY_DISABLED))
                 parameter_table.put(name, value);
         }
+
         return parameter_table;
     }
 
-    //TODO: allow this function to set values for Views in LinearLayouts
+    //This function and its helper allows you to set values for Views in LinearLayouts based on a hash
+    //Currently only used when reloading RAI
     public void setRAIfields(LinearLayout list, Activity buildActivity, Hashtable<String, Object> hash){
         Hashtable<String, Object> parameter_table = (Hashtable<String, Object>) ((Hashtable<String, Object>) hash.get(RPCRequest.KEY_REQUEST)).get(RPCRequest.KEY_PARAMETERS);
         setRAIfields_helper(list, buildActivity, parameter_table);
@@ -132,8 +132,6 @@ public class RBRequestBuilder {
                         ListStructParamsFragment structFragment = (ListStructParamsFragment) fragmentManager.findFragmentByTag(((BuildActivity) buildActivity).LIST_STRUCT_PARAMS_KEY + ":" + name.toLowerCase());
                         if(structFragment != null){
                             setRAIfields_helper( (LinearLayout) structFragment.getView().findViewById(R.id.param_holder), buildActivity, (Hashtable<String, Object>) value);
-                        }else{
-                            value = "I am a struct.";
                         }
                     } else if (v instanceof RBEnumSpinner) {
                         String val = (String) value;

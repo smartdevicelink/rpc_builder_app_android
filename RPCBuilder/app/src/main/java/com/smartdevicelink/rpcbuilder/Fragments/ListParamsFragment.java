@@ -2,6 +2,7 @@ package com.smartdevicelink.rpcbuilder.Fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,6 +52,7 @@ public class ListParamsFragment extends Fragment {
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.param_holder);
 
+            //Todo: Incorporate this into RBParamView, it should reutrn a fully built linearlayout
             for (RBParam p : request.getParams()) {
                 RBParamView rb = new RBParamView(getActivity());
                 rb.setLayoutParams(lparams);
@@ -97,9 +99,8 @@ public class ListParamsFragment extends Fragment {
 
         // Remove this fragment, go to list of RPC requests
         buildActivity.hideFragment(this);
-        buildActivity.showFragment(ListFuncsFragment.class);
 
-        // handle item selection
+        // Handle item selection
         switch (item.getItemId()) {
             case R.id.send:
 
@@ -110,10 +111,14 @@ public class ListParamsFragment extends Fragment {
                 }
 
                 buildActivity.sendRPCRequest(hash);
+                buildActivity.showFragment(ListFuncsFragment.class);
                 return true;
 
             case R.id.back:
-                // Remove and hide this fragment, go back to list of requests (RBfunctions)
+                if(!buildActivity.getConnectionEstablished()) // If connection does not exist, finish Activity and go back to Settings
+                    buildActivity.finish();
+                else // otherwise, show the ListFuncFragment
+                    buildActivity.showFragment(ListFuncsFragment.class);
                 return true;
 
             default:
