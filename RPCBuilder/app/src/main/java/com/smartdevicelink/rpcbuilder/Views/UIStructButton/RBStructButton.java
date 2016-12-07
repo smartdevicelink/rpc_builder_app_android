@@ -15,14 +15,17 @@ import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
 
 public class RBStructButton extends Button{
 
-    Context mContext;
+    private Context mContext;
+    private RBStruct rbStruct;
 
     public RBStructButton(Context context){
         super(context);
         mContext = context;
     }
 
-    public void format(final RBStruct rbStruct){
+    public void format(final RBStruct rbs){
+        rbStruct = rbs;
+
         final BuildActivity buildActivity = ((BuildActivity) mContext);
         buildActivity.setRBStruct(rbStruct);
         buildActivity.addFragment(ListStructParamsFragment.class);

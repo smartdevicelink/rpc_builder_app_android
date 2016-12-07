@@ -1,6 +1,7 @@
 package com.smartdevicelink.rpcbuilder.Fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -57,8 +59,6 @@ public class ListParamsFragment extends Fragment {
             rb.setId(R.id.param_holder);
             scrollView.addView(rb);
 
-            //Todo: Incorporate this into RBParamView, it should reutrn a fully built linearlayout
-
             getActivity().setTitle(request.name);
             setHasOptionsMenu(true);
 
@@ -98,6 +98,10 @@ public class ListParamsFragment extends Fragment {
 
         // Remove this fragment, go to list of RPC requests
         buildActivity.hideFragment(this);
+
+        final InputMethodManager imm = (InputMethodManager) buildActivity.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
 
         // Handle item selection
         switch (item.getItemId()) {
