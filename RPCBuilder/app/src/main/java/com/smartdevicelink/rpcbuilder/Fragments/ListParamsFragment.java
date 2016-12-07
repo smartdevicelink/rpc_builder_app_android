@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
 import com.smartdevicelink.protocol.enums.FunctionID;
@@ -49,22 +50,20 @@ public class ListParamsFragment extends Fragment {
         BuildActivity buildActivity = (BuildActivity) getActivity();
 
         if(request != null) {
-            LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.param_holder);
+            ScrollView scrollView = (ScrollView) view.findViewById(R.id.param_scroller);
+
+            RBParamView rb = new RBParamView(getActivity());
+            rb.giveRequest(request);
+            rb.setId(R.id.param_holder);
+            scrollView.addView(rb);
 
             //Todo: Incorporate this into RBParamView, it should reutrn a fully built linearlayout
-            for (RBParam p : request.getParams()) {
-                RBParamView rb = new RBParamView(getActivity());
-                rb.setLayoutParams(lparams);
-                rb.addParam(p);
-                linearLayout.addView(rb);
-            }
 
             getActivity().setTitle(request.name);
             setHasOptionsMenu(true);
 
             if(request.name.equals(FunctionID.REGISTER_APP_INTERFACE.toString())){
-                loadRAI(linearLayout);
+                loadRAI(rb);
             }
         }
 
@@ -103,7 +102,6 @@ public class ListParamsFragment extends Fragment {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.send:
-
                 try {
                     Log.d("Before", JsonRPCMarshaller.serializeHashtable(hash).toString(1));
                 } catch (JSONException e) {

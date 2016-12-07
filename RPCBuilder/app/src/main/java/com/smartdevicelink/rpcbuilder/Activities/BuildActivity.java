@@ -10,14 +10,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PersistableBundle;
+import android.provider.MediaStore;
 import android.support.annotation.BoolRes;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -37,6 +41,9 @@ import com.smartdevicelink.transport.TCPTransport;
 
 import org.json.JSONException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,12 +54,14 @@ import java.util.TimerTask;
 import static com.smartdevicelink.proxy.constants.Names.seconds;
 
 public class BuildActivity extends AppCompatActivity {
+    public final int FILE_PICKER_SUCCESS = 12;
     private Boolean connectionEstablished = false;
 
     private String filename = "Mobile_API_4.1.xml";
     private String ip_address = "";
     private String port = "12345";
     private String connectionType = "TCP";
+    private String bulkData = null;
 
     private ParserHandler parserHandler = null;
     private RBFunction rbFunction = null;
@@ -106,6 +115,7 @@ public class BuildActivity extends AppCompatActivity {
     protected void onDestroy() {
         Intent sdlServiceIntent = new Intent(this, SdlService.class);
         stopService(sdlServiceIntent); // make sure Sdl Service is stopped.
+        connectionEstablished = false;
         super.onDestroy();
     }
 
@@ -140,6 +150,30 @@ public class BuildActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode){
+            case FILE_PICKER_SUCCESS:
+                if(resultCode == RESULT_OK){
+                    Uri uri = data.getData();
+                    try {
+                        InputStream inputStream = getContentResolver().openInputStream(uri);
+                        Log.d("ISTREAM BYTES AVAIL:", ""+inputStream.available());
+
+                        bulkData = uri.toString();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     // handles extras in Intent sent from SettingsActivity
@@ -211,8 +245,12 @@ public class BuildActivity extends AppCompatActivity {
 
         if(fragment_type == ListFuncsFragment.class){
 
-            ListFuncsFragment fragment = new ListFuncsFragment();
-            fragmentTransaction.add(R.id.activity_build, fragment, LIST_FUNCS_KEY);
+            ListFuncsFragment fragment = (ListFuncsFragment) fragmentManager.findFragmentByTag(LIST_FUNCS_KEY);
+
+            if(fragment == null){
+                fragment = new ListFuncsFragment();
+                fragmentTransaction.add(R.id.activity_build, fragment, LIST_FUNCS_KEY);
+            }
             fragmentTransaction.hide(fragment);
 
         }else if(fragment_type == ListParamsFragment.class){
@@ -252,9 +290,12 @@ public class BuildActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if(fragment_type == ListFuncsFragment.class){
+            ListFuncsFragment fragment = (ListFuncsFragment) fragmentManager.findFragmentByTag(LIST_FUNCS_KEY);
 
-            ListFuncsFragment fragment = new ListFuncsFragment();
-            fragmentTransaction.add(R.id.activity_build, fragment, LIST_FUNCS_KEY);
+            if(fragment == null){
+                fragment = new ListFuncsFragment();
+                fragmentTransaction.add(R.id.activity_build, fragment, LIST_FUNCS_KEY);
+            }
             fragmentTransaction.show(fragment);
 
         }else if(fragment_type == ListParamsFragment.class){
@@ -356,6 +397,8 @@ public class BuildActivity extends AppCompatActivity {
         Intent sdlServiceIntent = new Intent(this, SdlService.class);
         try {
             sdlServiceIntent.putExtra("sendRPCRequest", JsonRPCMarshaller.serializeHashtable(hash).toString());
+            if(rbFunction.requiresBulkData())
+                sdlServiceIntent.putExtra("bulkData", bulkData);
             handleOutgoingIntent(sdlServiceIntent);
         } catch (JSONException e) {
             e.printStackTrace();

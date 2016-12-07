@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
@@ -60,6 +62,7 @@ import com.smartdevicelink.proxy.rpc.OnVehicleData;
 import com.smartdevicelink.proxy.rpc.OnWayPointChange;
 import com.smartdevicelink.proxy.rpc.PerformAudioPassThruResponse;
 import com.smartdevicelink.proxy.rpc.PerformInteractionResponse;
+import com.smartdevicelink.proxy.rpc.PutFile;
 import com.smartdevicelink.proxy.rpc.PutFileResponse;
 import com.smartdevicelink.proxy.rpc.ReadDIDResponse;
 import com.smartdevicelink.proxy.rpc.RegisterAppInterface;
@@ -99,6 +102,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -129,6 +137,7 @@ public class SdlService extends Service implements IProxyListenerALM {
     private String connectionType = "TCP";
     private Boolean first_HMI_NONE = true;
     private Boolean connectionEstablished = false;
+    private String bulkData = null;
 
     private SdlProxyALM proxy;
 
@@ -226,10 +235,20 @@ public class SdlService extends Service implements IProxyListenerALM {
             }
             if(hash != null) { // Proxy is established, sending a general RPC Request
                 try {
-                    proxy.sendRPCRequest(new RPCRequest(hash));
+                    RPCRequest rpcRequest = new RPCRequest((hash));
+                    if(bulkData != null) {
+                        Uri uri = Uri.parse(bulkData);
+                        InputStream inputStream = getContentResolver().openInputStream(uri);
+                        rpcRequest.setBulkData(getBytes(inputStream));
+                    }
+                    proxy.sendRPCRequest(rpcRequest);
                 } catch (SdlException e) {
                     e.printStackTrace();
                     proxy = null;
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -238,11 +257,24 @@ public class SdlService extends Service implements IProxyListenerALM {
         return START_STICKY;
     }
 
+    private byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
+    }
+
     private String handleIncomingIntent(Intent intent){
         if(intent.getStringExtra("from").equals("BuildActivity")){
             ip_address = intent.getStringExtra("ip_address");
             port = intent.getStringExtra("port");
             connectionType = intent.getStringExtra("connectionType");
+            bulkData = intent.getStringExtra("bulkData");
         }
 
         return intent.getStringExtra("from");

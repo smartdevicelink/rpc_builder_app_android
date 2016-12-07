@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
 import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
@@ -33,15 +34,12 @@ public class ListStructParamsFragment extends Fragment {
         BuildActivity buildActivity = (BuildActivity) getActivity();
 
         if(request != null) {
-            LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.param_holder);
+            ScrollView scrollView = (ScrollView) view.findViewById(R.id.param_scroller);
 
-            for (RBParam p : request.getParams()) {
-                RBParamView rb = new RBParamView(getActivity());
-                rb.setLayoutParams(lparams);
-                rb.addParam(p);
-                linearLayout.addView(rb);
-            }
+            RBParamView rb = new RBParamView(getActivity());
+            rb.giveRequest(request);
+            rb.setId(R.id.param_holder);
+            scrollView.addView(rb);
 
             setHasOptionsMenu(true);
         }

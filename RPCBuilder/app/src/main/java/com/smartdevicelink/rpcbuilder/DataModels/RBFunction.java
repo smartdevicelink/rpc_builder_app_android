@@ -69,4 +69,13 @@ public class RBFunction extends RBStruct {
         return drawable_id;
     }
 
+    public boolean requiresBulkData(){
+        for(String BulkDataFunctionName : BulkDataFunctionNames){
+            if(BulkDataFunctionName.contains(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

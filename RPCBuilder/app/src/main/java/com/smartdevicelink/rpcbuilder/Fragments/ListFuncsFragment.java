@@ -19,6 +19,7 @@ import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
 import com.smartdevicelink.rpcbuilder.DataModels.RBFunction;
 import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.Views.RBFuncView;
+import com.smartdevicelink.rpcbuilder.Views.RBParamView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,7 @@ import java.util.Vector;
 
 public class ListFuncsFragment extends Fragment {
     private Vector<RBFunction> requests;
+    private String title = "RPC Requests";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,20 +41,27 @@ public class ListFuncsFragment extends Fragment {
 
         final BuildActivity buildActivity = (BuildActivity) getActivity();
         requests = buildActivity.getParserHandler().getRequests();
-        buildActivity.setTitle("RPC Requests");
+        buildActivity.setTitle(title);
 
-        setRetainInstance(true);//make retainable
+        setRetainInstance(true); //make retainable
 
         if(!requests.isEmpty()){
-            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.param_holder);
+            ScrollView scrollView = (ScrollView) view.findViewById(R.id.param_scroller);
 
             RBFuncView rbFuncView = new RBFuncView(getActivity());
-            linearLayout.addView(rbFuncView.setFuncs(requests));
+            scrollView.addView(rbFuncView.setFuncs(requests));
 
             setHasOptionsMenu(true);
         }
 
         return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden == false)
+            getActivity().setTitle(title);
     }
 
     @Override

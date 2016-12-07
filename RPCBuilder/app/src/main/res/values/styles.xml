@@ -8,4 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <item name="param_holder" type = "id"/>
+
 </resources>

@@ -122,7 +122,7 @@ public class RBRequestBuilder {
                             value = hash.get(name);
                         }
                     }
-                }else {
+                }else if (value != null){
                     if (v instanceof RBParamTextField) {
                         ((RBParamTextField) v).setText((String) value);
                     } else if (v instanceof RBSwitch) {

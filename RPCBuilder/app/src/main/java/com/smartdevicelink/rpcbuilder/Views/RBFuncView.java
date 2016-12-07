@@ -1,8 +1,11 @@
 package com.smartdevicelink.rpcbuilder.Views;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.print.PrintAttributes;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -90,6 +93,7 @@ public class RBFuncView extends LinearLayout {
         layout_params.height = LayoutParams.MATCH_PARENT;
         layout_params.weight = 1f;
         layout_params.gravity = Gravity.CENTER;
+        layout_params.setMargins(10, 0, 0, 0);
         textView.setLayoutParams(layout_params);
         textView.setText(rbf.name);
         //textView.setTextSize(R.dimen.font_size_medium);
@@ -98,7 +102,7 @@ public class RBFuncView extends LinearLayout {
             @Override
             public void onClick(View view) {
                 BuildActivity buildActivity = (BuildActivity) getContext();
-                buildActivity.removeFragment(buildActivity.getFragmentManager().findFragmentByTag(buildActivity.LIST_FUNCS_KEY));
+                buildActivity.hideFragment(buildActivity.getFragmentManager().findFragmentByTag(buildActivity.LIST_FUNCS_KEY));
                 buildActivity.setRBFunction(rbf);
                 buildActivity.showFragment(ListParamsFragment.class);
             }
@@ -121,8 +125,24 @@ public class RBFuncView extends LinearLayout {
             imageButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast toast = Toast.makeText(getContext(), rbf.objectDescription, Toast.LENGTH_LONG);
-                    toast.show();
+                    // 1. Instantiate an AlertDialog.Builder with its constructor
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                    // 2. Chain together various setter methods to set the dialog characteristics
+                    builder.setMessage(rbf.objectDescription)
+                            .setTitle(rbf.name);
+
+                    // 3. Add cancel or "OK" button
+                    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                    builder.setCancelable(true);
+
+                    // 4. Get the AlertDialog from create()
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             });
         }

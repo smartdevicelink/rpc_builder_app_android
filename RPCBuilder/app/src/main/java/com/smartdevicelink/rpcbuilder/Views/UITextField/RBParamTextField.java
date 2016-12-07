@@ -62,8 +62,18 @@ public class RBParamTextField extends EditText{
         }
 
         public InputFilterMinMax(String min, String max) {
-            this.min = Integer.parseInt(min);
-            this.max = Integer.parseInt(max);
+            Long safe_min, safe_max; // Have to protect against an input that is bigger than an Int (Mobile_API_3.1 revealed this)
+            safe_min = Long.parseLong(min);
+            safe_max = Long.parseLong(max);
+
+            if(safe_min >= Integer.MIN_VALUE)
+                this.min = Integer.parseInt(min);
+            else
+                this.min = Integer.MIN_VALUE;
+            if(safe_max <= Integer.MAX_VALUE)
+                this.max = Integer.parseInt(max);
+            else
+                this.max = Integer.MAX_VALUE;
         }
 
         @Override
