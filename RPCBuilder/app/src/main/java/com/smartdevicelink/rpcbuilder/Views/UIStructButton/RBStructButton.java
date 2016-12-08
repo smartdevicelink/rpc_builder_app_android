@@ -16,15 +16,16 @@ import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
 public class RBStructButton extends Button{
 
     private Context mContext;
-    private RBStruct rbStruct;
+
 
     public RBStructButton(Context context){
         super(context);
         mContext = context;
     }
 
-    public void format(final RBStruct rbs){
-        rbStruct = rbs;
+    public void format(RBStruct rbs){
+        final RBStruct rbStruct = rbs;
+        final String rbName = rbs.name; //if structs are same type, we have to differentiate
 
         final BuildActivity buildActivity = ((BuildActivity) mContext);
         buildActivity.setRBStruct(rbStruct);
@@ -33,6 +34,7 @@ public class RBStructButton extends Button{
         this.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                rbStruct.name = rbName;
 
                 buildActivity.hideFragment(buildActivity.getFragmentManager().findFragmentByTag(buildActivity.LIST_PARAMS_KEY + ":" + buildActivity.getRBFunction().name));
                 buildActivity.setRBStruct(rbStruct);
