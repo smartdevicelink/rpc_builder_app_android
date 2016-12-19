@@ -67,9 +67,7 @@ public class RBRequestBuilder {
                 View v = parameter.getChildAt(j);
                 if(j == 0){
                     if(v instanceof RBNameLabel){
-                        name = ((RBNameLabel) v).getText().toString();
-                        if(name.contains("*"))
-                            name = name.substring(0, name.lastIndexOf("*"));
+                        name = ((RBNameLabel) v).getRBParamName();
                         if(!((RBNameLabel) v).isChecked())
                             name = KEY_DISABLED;
                     }
@@ -115,9 +113,7 @@ public class RBRequestBuilder {
                 View v = parameter.getChildAt(j);
                 if(j == 0){
                     if(v instanceof RBNameLabel){
-                        name = ((RBNameLabel) v).getText().toString();
-                        if(name.contains("*"))
-                            name = name.substring(0, name.lastIndexOf("*"));
+                        name = ((RBNameLabel) v).getRBParamName();
                         if(hash.containsKey(name)){
                             value = hash.get(name);
                         }

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
 import com.smartdevicelink.protocol.enums.FunctionID;
@@ -51,6 +52,8 @@ public class ListParamsFragment extends Fragment {
 
         BuildActivity buildActivity = (BuildActivity) getActivity();
 
+        buildActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if(request != null) {
             ScrollView scrollView = (ScrollView) view.findViewById(R.id.param_scroller);
 
@@ -65,6 +68,9 @@ public class ListParamsFragment extends Fragment {
             if(request.name.equals(FunctionID.REGISTER_APP_INTERFACE.toString())){
                 loadRAI(rb);
             }
+
+            TextView textView = (TextView) view.findViewById(R.id.RequiredExplanation);
+            textView.bringToFront();
         }
 
         return view;
@@ -75,8 +81,10 @@ public class ListParamsFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(request != null && hidden == false)
+        if(request != null && hidden == false) {
             getActivity().setTitle(request.name);
+            ((BuildActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -116,12 +124,13 @@ public class ListParamsFragment extends Fragment {
                 buildActivity.showFragment(ListFuncsFragment.class);
                 return true;
 
-            case R.id.back:
+            case android.R.id.home:
                 if(!buildActivity.getConnectionEstablished()) // If connection does not exist, finish Activity and go back to Settings
                     buildActivity.finish();
                 else // otherwise, show the ListFuncFragment
                     buildActivity.showFragment(ListFuncsFragment.class);
                 return true;
+
 
             default:
                 // If we got here, the user's action was not recognized.

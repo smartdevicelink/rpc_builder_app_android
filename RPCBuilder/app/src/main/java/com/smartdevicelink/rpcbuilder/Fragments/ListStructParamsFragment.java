@@ -33,6 +33,8 @@ public class ListStructParamsFragment extends Fragment {
 
         BuildActivity buildActivity = (BuildActivity) getActivity();
 
+        buildActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if(request != null) {
             ScrollView scrollView = (ScrollView) view.findViewById(R.id.param_scroller);
 
@@ -66,7 +68,7 @@ public class ListStructParamsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
-            case R.id.back_from_second:
+            case android.R.id.home:
                 ((BuildActivity) getActivity()).hideFragment(this);
                 ((BuildActivity) getActivity()).showFragment(ListParamsFragment.class);
                 return true;

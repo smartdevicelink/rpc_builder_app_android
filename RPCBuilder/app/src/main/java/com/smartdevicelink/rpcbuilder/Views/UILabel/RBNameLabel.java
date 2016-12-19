@@ -2,10 +2,12 @@ package com.smartdevicelink.rpcbuilder.Views.UILabel;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
+import com.smartdevicelink.rpcbuilder.R;
 
 /**
  * Created by austinkirk on 11/16/16.
@@ -13,6 +15,7 @@ import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
 
 public class RBNameLabel extends TextView {
     private Boolean enabled = true;
+    private String rbParamName = "";
 
     public RBNameLabel(Context context){
         super(context);
@@ -24,7 +27,9 @@ public class RBNameLabel extends TextView {
         }else if(rbParam.mIsMandatory == false){
             enabled = false;
         }
-        this.setText( rbParam.mIsMandatory ? rbParam.name + "*" : rbParam.name );
+        rbParamName = rbParam.name;
+        String spaced_name = convertCamelCase(rbParam.name);
+        this.setText( rbParam.mIsMandatory ? spaced_name + "*" : spaced_name );
         this.setClickable( rbParam.mIsMandatory ? false : true);
         this.setTextColor( enabled ? Color.WHITE : Color.GRAY);
         this.setOnClickListener(new OnClickListener() {
@@ -36,5 +41,19 @@ public class RBNameLabel extends TextView {
         });
     }
 
+    private String convertCamelCase(String camelcase){
+        String spaced_name = "";
+        for (String w : camelcase.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")) {
+            if(w.length() > 1)
+                spaced_name += w.substring(0, 1).toUpperCase() + w.substring(1) + " ";
+            else
+                spaced_name += w.substring(0, 1).toUpperCase() + " ";
+        }
+        Log.d("camelcase converter", spaced_name);
+        return spaced_name;
+    }
+
     public Boolean isChecked(){return enabled;}
+
+    public String getRBParamName(){return rbParamName;};
 }

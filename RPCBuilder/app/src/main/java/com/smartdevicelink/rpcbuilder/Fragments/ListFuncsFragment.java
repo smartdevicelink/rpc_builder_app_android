@@ -37,11 +37,13 @@ public class ListFuncsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_param, container, false);
+        View view = inflater.inflate(R.layout.fragment_func, container, false);
 
         final BuildActivity buildActivity = (BuildActivity) getActivity();
         requests = buildActivity.getParserHandler().getRequests();
         buildActivity.setTitle(title);
+
+        buildActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         setRetainInstance(true); //make retainable
 
@@ -60,8 +62,10 @@ public class ListFuncsFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(hidden == false)
+        if(hidden == false) {
             getActivity().setTitle(title);
+            ((BuildActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
     }
 
     @Override
@@ -74,7 +78,7 @@ public class ListFuncsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
-            case R.id.back:
+            case R.id.back_to_settings:
                 getActivity().finish();
 
             default:

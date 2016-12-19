@@ -83,6 +83,8 @@ public class RBParamView extends LinearLayout {
         } else if (rbParam.mType.equals(RBBaseObject.RBTypeBooleanKey)) {
             RBSwitch view = new RBSwitch(getContext());
             view.format(rbParam);
+            wrap_params.gravity = Gravity.LEFT;
+            view.setLayoutParams(wrap_params);
             linearLayout.addView(view);
         } else if (rbStruct != null) {
             rbStruct.name = rbParam.name;
@@ -90,14 +92,11 @@ public class RBParamView extends LinearLayout {
             view.format(rbStruct);
             wrap_params.gravity = Gravity.LEFT;
             view.setLayoutParams(wrap_params);
-            view.setBackgroundColor(Color.TRANSPARENT);
-            view.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_keyboard_arrow_right_white_36dp), null, null, null);
+            view.setText("UPDATE");
             linearLayout.addView(view);
         } else if (rbEnum != null) {
             RBEnumSpinner view = new RBEnumSpinner(getContext());
             view.format(rbEnum);
-            wrap_params.gravity = Gravity.RIGHT;
-            view.setLayoutParams(wrap_params);
             linearLayout.addView(view);
         } else {
 
