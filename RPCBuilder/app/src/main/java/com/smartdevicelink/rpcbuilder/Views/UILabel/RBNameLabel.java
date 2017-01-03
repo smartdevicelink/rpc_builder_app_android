@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
@@ -37,6 +38,10 @@ public class RBNameLabel extends TextView {
             public void onClick(View view) {
                 enabled = !enabled;
                 ((TextView) view).setTextColor( enabled ? Color.WHITE : Color.GRAY);
+
+                LinearLayout container = (LinearLayout) getParent();
+                View child = container.getChildAt(1);
+                child.setEnabled(enabled);
             }
         });
     }

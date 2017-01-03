@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -79,12 +80,14 @@ public class RBParamView extends LinearLayout {
 
             RBParamTextField view = new RBParamTextField(getContext());
             view.format(rbParam);
+            view.setEnabled(rbNameLabel.isChecked());
             linearLayout.addView(view);
         } else if (rbParam.mType.equals(RBBaseObject.RBTypeBooleanKey)) {
             RBSwitch view = new RBSwitch(getContext());
             view.format(rbParam);
             wrap_params.gravity = Gravity.LEFT;
             view.setLayoutParams(wrap_params);
+            view.setEnabled(rbNameLabel.isChecked());
             linearLayout.addView(view);
         } else if (rbStruct != null) {
             rbStruct.name = rbParam.name;
@@ -93,13 +96,13 @@ public class RBParamView extends LinearLayout {
             wrap_params.gravity = Gravity.LEFT;
             view.setLayoutParams(wrap_params);
             view.setText("UPDATE");
+            view.setEnabled(rbNameLabel.isChecked());
             linearLayout.addView(view);
         } else if (rbEnum != null) {
             RBEnumSpinner view = new RBEnumSpinner(getContext());
             view.format(rbEnum);
+            view.setEnabled(rbNameLabel.isChecked());
             linearLayout.addView(view);
-        } else {
-
         }
 
         addView(linearLayout);
@@ -115,10 +118,9 @@ public class RBParamView extends LinearLayout {
         textView.setText("Bulk Data");
         linearLayout.addView(textView);
 
-        ImageButton imageButton = new ImageButton(getContext());
-        imageButton.setImageResource(R.drawable.ic_attach_file_white_36dp);
-        imageButton.setBackgroundColor(Color.TRANSPARENT);
-        imageButton.setOnClickListener(new OnClickListener() {
+        Button bulkButton = new Button(getContext());
+        bulkButton.setText("Add File");
+        bulkButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -128,9 +130,9 @@ public class RBParamView extends LinearLayout {
         });
         LayoutParams image_params = wrap_params;
         image_params.gravity = Gravity.LEFT;
-        imageButton.setLayoutParams(image_params);
+        bulkButton.setLayoutParams(image_params);
 
-        linearLayout.addView(imageButton);
+        linearLayout.addView(bulkButton);
         addView(linearLayout);
     }
 }

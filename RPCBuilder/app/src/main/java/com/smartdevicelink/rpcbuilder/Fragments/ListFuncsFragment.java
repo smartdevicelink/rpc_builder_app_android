@@ -1,6 +1,8 @@
 package com.smartdevicelink.rpcbuilder.Fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,7 +81,24 @@ public class ListFuncsFragment extends Fragment {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.back_to_settings:
-                getActivity().finish();
+                // 1. Instantiate an AlertDialog.Builder with its constructor
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                // 2. Chain together various setter methods to set the dialog characteristics
+                builder.setMessage("This will end the current proxy session.")
+                        .setTitle("Stop Proxy?");
+
+                // 3. Add cancel ability and "OK" button
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        getActivity().finish();
+                    }
+                });
+                builder.setCancelable(true);
+
+                // 4. Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+                dialog.show();
 
             default:
                 // If we got here, the user's action was not recognized.

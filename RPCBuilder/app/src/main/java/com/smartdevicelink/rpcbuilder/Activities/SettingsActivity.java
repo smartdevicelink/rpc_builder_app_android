@@ -31,10 +31,10 @@ import java.util.Hashtable;
 
 public class SettingsActivity extends AppCompatActivity {
     private final String Settings_file = "Settings_file";
-    private String filename;
-    private String connectionType;
-    private String ip_address;
-    private String port;
+    private String filename = "file";
+    private String connectionType = "BT";
+    private String ip_address = "IP Addr";
+    private String port = "12345";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

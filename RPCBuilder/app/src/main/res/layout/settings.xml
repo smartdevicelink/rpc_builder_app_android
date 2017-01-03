@@ -51,14 +51,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="IP Address"
-        android:textSize="@dimen/font_size_small"/>
+        android:textSize="@dimen/font_size_small"
+        />
 
     <EditText
         android:id="@+id/ip_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="192.168.101.112"
-        android:textSize="@dimen/font_size_small"/>
+        android:textSize="@dimen/font_size_small"
+        android:maxLines="1"
+        android:singleLine="true"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -71,7 +74,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="12345"
-        android:textSize="@dimen/font_size_small"/>
+        android:textSize="@dimen/font_size_small"
+        android:maxLines="1"
+        android:singleLine="true"/>
 
 
 </LinearLayout>

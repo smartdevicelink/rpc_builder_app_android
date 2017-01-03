@@ -17,6 +17,7 @@ public class RBParamTextField extends EditText{
 
     public RBParamTextField(Context context){
         super(context);
+        this.setSingleLine();
     }
 
     public void format(RBParam rbParam){
