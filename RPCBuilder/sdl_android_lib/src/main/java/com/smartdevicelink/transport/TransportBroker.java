@@ -62,7 +62,7 @@ public class TransportBroker {
 				isBound = true;
 				//So we just established our connection
 				//Register with router service
-				sendRegistrationMessage();    
+				sendRegistrationMessage();
 			}
 
 			public void onServiceDisconnected(ComponentName className) {

@@ -46,7 +46,7 @@ public class RBNameLabel extends TextView {
         });
     }
 
-    private String convertCamelCase(String camelcase){
+    public static String convertCamelCase(String camelcase){
         String spaced_name = "";
         for (String w : camelcase.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")) {
             if(w.length() > 1)

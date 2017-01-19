@@ -95,7 +95,7 @@ public class RBFuncView extends LinearLayout {
         layout_params.gravity = Gravity.CENTER;
         layout_params.setMargins(10, 0, 0, 0);
         textView.setLayoutParams(layout_params);
-        textView.setText(rbf.name);
+        textView.setText(RBNameLabel.convertCamelCase(rbf.name));
         //textView.setTextSize(R.dimen.font_size_medium);
         textView.setGravity(Gravity.CENTER_VERTICAL);
         textView.setOnClickListener(new OnClickListener() {
