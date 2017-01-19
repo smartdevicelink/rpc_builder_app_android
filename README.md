@@ -4,11 +4,10 @@
 The SmartDeviceLink RPC Builder is designed to allow free testing of the SDL Interface during development. It will allow sending all Remote Procedure Calls (RPCs) to SDL Core. The user has to ensure the right sequence of commands to be send. (E.g. a performInteraction cannot be successful if the user did not send a createInteractionChoiceSet before. Please familiarize yourself with the SDL App Developer documentation.)
 
 ## Getting Started
-In order to begin using RPC Builder, we must first clone this repository. Then all that is needed is to navigate to the apk's directory and install the built apk:
+In order to begin using RPC Builder, we must first clone this repository. Then all that is needed is to navigate to the apk's directory and install the built apk on your connected Android device:
 ```
-cd rpc_builder_app_android/RPCBuilder/app/build
-outputs/apk
-adb install
+cd rpc_builder_app_android/RPCBuilder/app/build/outputs/apk
+adb install RPCBuilder.apk
 ```
 
 ## Interface
