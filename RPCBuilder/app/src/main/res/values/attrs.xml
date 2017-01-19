@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RBParamView">
+        <attr name="pName" format="string" />
+        <attr name="pType" format="string" />
+        <attr name="pValue" format="string" />
+    </declare-styleable>
+</resources>

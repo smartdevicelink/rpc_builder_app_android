@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/back_to_settings"
+        android:icon="@drawable/ic_settings_white_36dp"
+        android:title="Settings"
+        app:showAsAction="ifRoom"/>
+
+</menu>

@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">RPC Builder</string>
+    <string-array name="connection_methods">
+        <item>TCP</item>
+        <item>BT</item>
+    </string-array>
+    <string name="RegisterAppInterface">RegisterAppInterface</string>
+    <string name="TapExplanation">Tap Parameter Name to Include/Remove from RPC</string>
+    <string name="RequiredExplanation">* Required Parameter</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

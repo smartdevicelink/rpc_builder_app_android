@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RPCBuilder.iml" filepath="$PROJECT_DIR$/RPCBuilder.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sdl_android_lib/sdl_android_lib.iml" filepath="$PROJECT_DIR$/sdl_android_lib/sdl_android_lib.iml" />
     </modules>
   </component>
 </project>

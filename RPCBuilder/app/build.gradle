@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "com.smartdevicelink.rpcbuilder"
-        minSdkVersion 9
+        minSdkVersion 14 //for functionality
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -25,5 +25,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile project(path: ':sdl_android_lib')
     testCompile 'junit:junit:4.12'
 }

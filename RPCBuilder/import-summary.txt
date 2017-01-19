@@ -1,0 +1,30 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => sdl_android_lib/src/main/AndroidManifest.xml
+* res/ => sdl_android_lib/src/main/res/
+* src/ => sdl_android_lib/src/main/java/
+* src/com/smartdevicelink/protocol/SdlPacket.aidl => sdl_android_lib/src/main/aidl/com/smartdevicelink/protocol/SdlPacket.aidl
+* /Users/austinkirk/Documents/sdl_android/sdl_android_tests/libs/json.jar => sdl_android_lib/libs/json.jar
+* /Users/austinkirk/Documents/sdl_android/sdl_android_tests/res/ => sdl_android_lib/src/androidTest/res/
+* /Users/austinkirk/Documents/sdl_android/sdl_android_tests/src/ => sdl_android_lib/src/androidTest/java/
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

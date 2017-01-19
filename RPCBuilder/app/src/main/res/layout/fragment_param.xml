@@ -1,0 +1,46 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="0dp"
+        android:layout_marginTop="0px"
+        android:layout_marginBottom="0px">
+
+        <TextView
+            android:id="@+id/TapExplanation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/TapExplanation"
+            android:gravity="center_horizontal"
+            android:layout_gravity="top"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/text_margin"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TapExplanation"
+            android:layout_above="@+id/RequiredExplanation"
+            android:id="@+id/param_scroller">
+        </ScrollView>
+
+
+        <TextView
+            android:id="@+id/RequiredExplanation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/RequiredExplanation"
+            android:gravity="left"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/text_margin"
+            android:layout_alignParentBottom="true"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>
