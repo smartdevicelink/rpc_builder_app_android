@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/austinkirk/Documents/rpc_builder_app_android/RPCBuilder/sdl_android_lib/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/Users/austinkirk/Documents/rpc_builder_app_android/RPCBuilder/sdl_android_lib/src/release/jniLibs"/></dataSet></merger>
