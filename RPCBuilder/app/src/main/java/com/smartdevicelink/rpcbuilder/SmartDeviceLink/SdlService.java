@@ -2,31 +2,20 @@ package com.smartdevicelink.rpcbuilder.SmartDeviceLink;
 
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.smartdevicelink.exception.SdlException;
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
-import com.smartdevicelink.proxy.IProxyListener;
 import com.smartdevicelink.proxy.RPCRequest;
 import com.smartdevicelink.proxy.SdlProxyALM;
 import com.smartdevicelink.proxy.SdlProxyBuilder;
-import com.smartdevicelink.proxy.SdlProxyConfigurationResources;
 import com.smartdevicelink.proxy.callbacks.OnServiceEnded;
 import com.smartdevicelink.proxy.callbacks.OnServiceNACKed;
-import com.smartdevicelink.proxy.constants.Names;
 import com.smartdevicelink.proxy.interfaces.IProxyListenerALM;
 import com.smartdevicelink.proxy.rpc.AddCommandResponse;
 import com.smartdevicelink.proxy.rpc.AddSubMenuResponse;
-import com.smartdevicelink.proxy.rpc.Alert;
 import com.smartdevicelink.proxy.rpc.AlertManeuverResponse;
 import com.smartdevicelink.proxy.rpc.AlertResponse;
 import com.smartdevicelink.proxy.rpc.ChangeRegistrationResponse;
@@ -62,10 +51,8 @@ import com.smartdevicelink.proxy.rpc.OnVehicleData;
 import com.smartdevicelink.proxy.rpc.OnWayPointChange;
 import com.smartdevicelink.proxy.rpc.PerformAudioPassThruResponse;
 import com.smartdevicelink.proxy.rpc.PerformInteractionResponse;
-import com.smartdevicelink.proxy.rpc.PutFile;
 import com.smartdevicelink.proxy.rpc.PutFileResponse;
 import com.smartdevicelink.proxy.rpc.ReadDIDResponse;
-import com.smartdevicelink.proxy.rpc.RegisterAppInterface;
 import com.smartdevicelink.proxy.rpc.ResetGlobalPropertiesResponse;
 import com.smartdevicelink.proxy.rpc.ScrollableMessageResponse;
 import com.smartdevicelink.proxy.rpc.SdlMsgVersion;
@@ -89,10 +76,7 @@ import com.smartdevicelink.proxy.rpc.UnsubscribeVehicleDataResponse;
 import com.smartdevicelink.proxy.rpc.UnsubscribeWayPointsResponse;
 import com.smartdevicelink.proxy.rpc.UpdateTurnListResponse;
 import com.smartdevicelink.proxy.rpc.enums.AppHMIType;
-import com.smartdevicelink.proxy.rpc.enums.FileType;
-import com.smartdevicelink.proxy.rpc.enums.HMILevel;
 import com.smartdevicelink.proxy.rpc.enums.Language;
-import com.smartdevicelink.proxy.rpc.enums.LockScreenStatus;
 import com.smartdevicelink.proxy.rpc.enums.SdlDisconnectedReason;
 import com.smartdevicelink.transport.BTTransportConfig;
 import com.smartdevicelink.transport.TCPTransportConfig;
@@ -102,15 +86,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import static android.provider.UserDictionary.Words.APP_ID;
 import static com.smartdevicelink.proxy.constants.Names.appHMIType;
 import static com.smartdevicelink.proxy.constants.Names.appID;
 import static com.smartdevicelink.proxy.constants.Names.appName;
@@ -121,9 +102,7 @@ import static com.smartdevicelink.proxy.constants.Names.languageDesired;
 import static com.smartdevicelink.proxy.constants.Names.ngnMediaScreenAppName;
 import static com.smartdevicelink.proxy.constants.Names.sdlMsgVersion;
 import static com.smartdevicelink.proxy.constants.Names.ttsName;
-import static com.smartdevicelink.proxy.constants.Names.type;
 import static com.smartdevicelink.proxy.constants.Names.vrSynonyms;
-import static com.smartdevicelink.proxy.rpc.enums.FileType.JSON;
 
 /**
  * Created by austinkirk on 11/1/16.
@@ -270,6 +249,9 @@ public class SdlService extends Service implements IProxyListenerALM {
     }
 
     private String handleIncomingIntent(Intent intent){
+        if(!intent.hasExtra("from"))
+            return null;
+
         if(intent.getStringExtra("from").equals("BuildActivity")){
             ip_address = intent.getStringExtra("ip_address");
             port = intent.getStringExtra("port");
@@ -309,15 +291,12 @@ public class SdlService extends Service implements IProxyListenerALM {
         //Stop the service
         stopSelf();
 
-        if(reason == SdlDisconnectedReason.LANGUAGE_CHANGE) {
-            if(connectionType.equals("BT")){ // if on Bluetooth
-                Looper.prepare();
-                SdlReceiver.queryForConnectedService(this);
-            }else{ //else, on TCP
-                Intent sdlServiceIntent = new Intent(this, SdlService.class);
-                startService(sdlServiceIntent);
-            }
-        }
+        //Completely back out
+        connectionEstablished = false;
+        Intent intent = new Intent();
+        intent.setAction(CONNECTION_NOTIFICATION_ACTION);
+        intent.putExtra("connectionEstablished", connectionEstablished.toString());
+        sendBroadcast(intent);
     }
 
     @Override
@@ -497,9 +476,7 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onSetAppIconResponse(SetAppIconResponse response) {
-        if(response.getSuccess() && response.getCorrelationID() == 2){
-            Log.d("DEBUG", "App Icon successfully set.");
-        }
+
     }
 
     @Override
@@ -646,8 +623,6 @@ public class SdlService extends Service implements IProxyListenerALM {
                 if(first_HMI_NONE){
                     first_HMI_NONE = false;
                     connectionEstablished = true;
-
-                    //Toast.makeText(getApplicationContext(), "Connected to Core.", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent();
                     intent.setAction(CONNECTION_NOTIFICATION_ACTION);

@@ -6,7 +6,7 @@ The SmartDeviceLink RPC Builder is designed to allow free testing of the SDL Int
 ## Getting Started
 In order to begin using RPC Builder, we must first clone this repository. Then all that is needed is to navigate to the apk's directory and install the built apk on your connected Android device:
 ```
-cd rpc_builder_app_android/RPCBuilder/app/build/outputs/apk
+cd rpc_builder_app_android/RPCBuilder/app/build/apk
 adb install RPCBuilder.apk
 ```
 

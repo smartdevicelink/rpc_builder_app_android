@@ -15,6 +15,7 @@ import com.smartdevicelink.rpcbuilder.Views.UILabel.RBNameLabel;
 import com.smartdevicelink.rpcbuilder.Views.UIStructButton.RBStructButton;
 import com.smartdevicelink.rpcbuilder.Views.UISwitch.RBSwitch;
 import com.smartdevicelink.rpcbuilder.Views.UITextField.RBParamTextField;
+import com.smartdevicelink.util.CorrelationIdGenerator;
 
 import java.util.Hashtable;
 
@@ -26,7 +27,6 @@ public class RBRequestBuilder {
     private final int 	REGISTER_APP_INTERFACE_CORRELATION_ID = 65529,
             UNREGISTER_APP_INTERFACE_CORRELATION_ID = 65530,
             POLICIES_CORRELATION_ID = 65535;
-    private int correlation_id = 1;
     private final String KEY_DISABLED = "DISABLED";
 
     public RBRequestBuilder(){}
@@ -49,9 +49,9 @@ public class RBRequestBuilder {
         if(function_name.toLowerCase().equals("registerappinterface"))
             return REGISTER_APP_INTERFACE_CORRELATION_ID;
         else if(function_name.toLowerCase().equals("unregisterappinterface"))
-            return UNREGISTER_APP_INTERFACE_CORRELATION_ID;
+            return UNREGISTER_APP_INTERFACE_CORRELATION_ID; // This is not allowed
         else
-            return correlation_id++;
+            return CorrelationIdGenerator.generateId();
     }
 
     private Hashtable<String, Object> buildFields(LinearLayout list, Activity buildActivity){
