@@ -127,7 +127,9 @@ public class SdlService extends Service implements IProxyListenerALM {
         boolean forceConnect = intent !=null && intent.getBooleanExtra(TransportConstants.FORCE_TRANSPORT_CONNECTED, false);
 
         // Handle incoming intent, grab connection information if it is from BuildActivity
-        handleIncomingIntent(intent);
+        if(handleIncomingIntent(intent) == null){
+            return START_STICKY;
+        }
 
         // Are we sending an RPC request? If so, grab the Hashtable associated with it
         Hashtable<String, Object> hash = null;
@@ -249,7 +251,7 @@ public class SdlService extends Service implements IProxyListenerALM {
     }
 
     private String handleIncomingIntent(Intent intent){
-        if(!intent.hasExtra("from"))
+        if(intent == null)
             return null;
 
         if(intent.getStringExtra("from").equals("BuildActivity")){
@@ -336,7 +338,6 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onAddCommandResponse(AddCommandResponse response) {
-
     }
 
     @Override
@@ -391,7 +392,6 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onShowResponse(ShowResponse response) {
-
     }
 
     @Override
@@ -486,7 +486,6 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onChangeRegistrationResponse(ChangeRegistrationResponse response) {
-
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.smartdevicelink.rpcbuilder.Activities;
 
 import android.annotation.TargetApi;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -10,16 +9,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.PersistableBundle;
-import android.provider.MediaStore;
-import android.support.annotation.BoolRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
@@ -37,21 +30,15 @@ import com.smartdevicelink.rpcbuilder.Parser.ParserHandler;
 import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.SmartDeviceLink.SdlReceiver;
 import com.smartdevicelink.rpcbuilder.SmartDeviceLink.SdlService;
-import com.smartdevicelink.transport.TCPTransport;
 
 import org.json.JSONException;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static com.smartdevicelink.proxy.constants.Names.seconds;
 
 public class BuildActivity extends AppCompatActivity {
     public final int FILE_PICKER_SUCCESS = 12;
@@ -147,6 +134,9 @@ public class BuildActivity extends AppCompatActivity {
                 connectionEstablished = true;
                 progress.dismiss();
                 Toast.makeText(getApplicationContext(), "Connected to Core.", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getApplicationContext(), "Disconnected from Core.", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
 

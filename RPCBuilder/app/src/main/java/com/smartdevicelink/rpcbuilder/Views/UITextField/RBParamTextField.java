@@ -14,6 +14,7 @@ import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
  */
 
 public class RBParamTextField extends EditText{
+    private String mType;
 
     public RBParamTextField(Context context){
         super(context);
@@ -21,6 +22,7 @@ public class RBParamTextField extends EditText{
     }
 
     public void format(RBParam rbParam){
+        mType = rbParam.mType;
         InputFilter filter = null;
 
         if(rbParam.mType.equals(RBBaseObject.RBTypeStringKey)){
@@ -92,4 +94,7 @@ public class RBParamTextField extends EditText{
         }
     }
 
+    public String getType(){
+       return mType;
+    }
 }

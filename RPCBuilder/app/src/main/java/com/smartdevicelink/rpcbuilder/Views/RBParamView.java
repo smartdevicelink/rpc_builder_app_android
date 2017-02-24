@@ -2,14 +2,10 @@ package com.smartdevicelink.rpcbuilder.Views;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,14 +15,11 @@ import com.smartdevicelink.rpcbuilder.DataModels.RBEnum;
 import com.smartdevicelink.rpcbuilder.DataModels.RBFunction;
 import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
 import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
-import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.Views.UIEnumSpinner.RBEnumSpinner;
 import com.smartdevicelink.rpcbuilder.Views.UILabel.RBNameLabel;
 import com.smartdevicelink.rpcbuilder.Views.UIStructButton.RBStructButton;
 import com.smartdevicelink.rpcbuilder.Views.UISwitch.RBSwitch;
 import com.smartdevicelink.rpcbuilder.Views.UITextField.RBParamTextField;
-
-import java.util.Vector;
 
 /**
  * Created by austinkirk on 11/16/16.
@@ -92,6 +85,9 @@ public class RBParamView extends LinearLayout {
         } else if (rbStruct != null) {
             rbStruct.name = rbParam.name;
             RBStructButton view = new RBStructButton(getContext());
+            if(rbParam.mRequiresArray != null){
+                view.setArray(rbParam.mRequiresArray);
+            }
             view.format(rbStruct);
             wrap_params.gravity = Gravity.LEFT;
             view.setLayoutParams(wrap_params);

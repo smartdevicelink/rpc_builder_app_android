@@ -3,7 +3,6 @@ package com.smartdevicelink.rpcbuilder.Fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,10 +19,9 @@ import com.smartdevicelink.marshal.JsonRPCMarshaller;
 import com.smartdevicelink.protocol.enums.FunctionID;
 import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
 import com.smartdevicelink.rpcbuilder.DataModels.RBFunction;
-import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
+import com.smartdevicelink.rpcbuilder.DataModels.RBRequestBuilder;
 import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.Views.RBParamView;
-import com.smartdevicelink.rpcbuilder.DataModels.RBRequestBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,7 +113,7 @@ public class ListParamsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.send:
                 try {
-                    Log.d("Before", JsonRPCMarshaller.serializeHashtable(hash).toString(1));
+                    Log.d("Sending RPC", JsonRPCMarshaller.serializeHashtable(hash).toString(1));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -202,8 +200,9 @@ public class ListParamsFragment extends Fragment {
             RBRequestBuilder rbrb = new RBRequestBuilder();
             try {
                 rbrb.setRAIfields(linearLayout, (BuildActivity) getActivity(),  JsonRPCMarshaller.deserializeJSONObject(new JSONObject(data)));
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Log.e("LoadRAI", "RAI cache was corrupt, clearing."); // file was corrupt, let's delete it
+                file.delete();
             }
         }
     }
