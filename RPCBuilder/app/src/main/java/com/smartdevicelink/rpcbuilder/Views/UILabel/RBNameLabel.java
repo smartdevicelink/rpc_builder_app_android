@@ -2,13 +2,11 @@ package com.smartdevicelink.rpcbuilder.Views.UILabel;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
-import com.smartdevicelink.rpcbuilder.R;
 
 /**
  * Created by austinkirk on 11/16/16.
@@ -54,7 +52,6 @@ public class RBNameLabel extends TextView {
             else
                 spaced_name += w.substring(0, 1).toUpperCase() + " ";
         }
-        Log.d("camelcase converter", spaced_name);
         return spaced_name;
     }
 

@@ -18,6 +18,7 @@ import com.smartdevicelink.rpcbuilder.Views.UITextField.RBParamTextField;
 import com.smartdevicelink.util.CorrelationIdGenerator;
 
 import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * Created by austinkirk on 11/18/16.
@@ -73,14 +74,27 @@ public class RBRequestBuilder {
                     }
                 }else {
                     if (v instanceof RBParamTextField) {
-                        value = ((RBParamTextField) v).getText().toString();
+                        if(((RBParamTextField) v).getType().equals("Integer")){
+                            try {
+                                value = Integer.parseInt(((RBParamTextField) v).getText().toString());
+                            }catch (NumberFormatException e){
+                                value = ((RBParamTextField) v).getText().toString();
+                            }
+                        }else {
+                            value = ((RBParamTextField) v).getText().toString();
+                        }
                     } else if (v instanceof RBSwitch) {
                         value = ((RBSwitch) v).isChecked();
                     } else if (v instanceof RBStructButton) {
                         FragmentManager fragmentManager =  ((BuildActivity) buildActivity).getFragmentManager();
                         ListStructParamsFragment structFragment = (ListStructParamsFragment) fragmentManager.findFragmentByTag(((BuildActivity) buildActivity).LIST_STRUCT_PARAMS_KEY + ":" + name.toLowerCase());
                         if(structFragment != null){
-                            value = buildFields( (LinearLayout) structFragment.getView().findViewById(R.id.param_holder), buildActivity);
+                            if(((RBStructButton) v).isArray()){
+                                value = new Vector<Object>();
+                                ((Vector<Object>) value).add(buildFields((LinearLayout) structFragment.getView().findViewById(R.id.param_holder), buildActivity));
+                            }else{
+                                value = buildFields((LinearLayout) structFragment.getView().findViewById(R.id.param_holder), buildActivity);
+                            }
                         }
                     } else if (v instanceof RBEnumSpinner) {
                         value = ((RBEnumSpinner) v).getSelectedItem().toString();
@@ -120,7 +134,11 @@ public class RBRequestBuilder {
                     }
                 }else if (value != null){
                     if (v instanceof RBParamTextField) {
-                        ((RBParamTextField) v).setText((String) value);
+                        if(((RBParamTextField) v).getType().equals("Integer")){
+                            ((RBParamTextField) v).setText("" + (Integer) value);
+                        }else {
+                            ((RBParamTextField) v).setText((String) value);
+                        }
                     } else if (v instanceof RBSwitch) {
                         ((RBSwitch) v).setChecked((Boolean) value);
                     } else if (v instanceof RBStructButton) {

@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
-import com.smartdevicelink.rpcbuilder.Fragments.ListStructParamsFragment;
 import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
+import com.smartdevicelink.rpcbuilder.Fragments.ListStructParamsFragment;
 
 /**
  * Created by austinkirk on 11/15/16.
@@ -16,6 +16,7 @@ import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
 public class RBStructButton extends Button{
 
     private Context mContext;
+    private boolean isArray;
 
 
     public RBStructButton(Context context){
@@ -41,6 +42,14 @@ public class RBStructButton extends Button{
                 buildActivity.showFragment(ListStructParamsFragment.class);
             }
         });
+    }
+
+    public boolean isArray(){
+        return isArray;
+    }
+
+    public void setArray(boolean a){
+        isArray = a;
     }
 
 }
