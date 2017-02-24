@@ -37,10 +37,15 @@ captures/
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
 /RPCBuilder/build/intermediates/dex-cache/cache.xml
-/RPCBuilder/sdl_android_lib/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml
-/RPCBuilder/sdl_android_lib/build/intermediates/incremental/compileReleaseAidl/dependency.store
-/RPCBuilder/sdl_android_lib/build/intermediates/incremental/mergeDebugAndroidTestResources/compile-file-map.properties
+/RPCBuilder/sdl_android_lib/build/
 /RPCBuilder/.idea/encodings.xml
-/RPCBuilder/sdl_android_lib/build/intermediates/blame/res/androidTest/debug/single/drawable-mdpi-v4.json
-/RPCBuilder/sdl_android_lib/build/intermediates/incremental/mergeDebugAndroidTestResources/merger.xml
-/RPCBuilder/sdl_android_lib/build/intermediates/incremental/packageReleaseResources/merger.xml
+/RPCBuilder/sdl_android_lib/sdl_android_lib.iml
+/.idea
+/RPCBuilder/.idea/gradle.xml
+/RPCBuilder/.idea/misc.xml
+/RPCBuilder/app/app.iml
+/RPCBuilder/app/build/outputs/
+/RPCBuilder/build/generated/mockable-android-18.jar
+/RPCBuilder/build/generated/mockable-android-23.jar
+/RPCBuilder/RPCBuilder.iml
+/RPCBuilder/sdl_android_lib/build/
