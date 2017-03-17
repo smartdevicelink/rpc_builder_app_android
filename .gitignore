@@ -1,0 +1,19 @@
+.settings/
+bin/
+gen/
+project.properties
+.classpath
+.project
+lint.xml
+proguard-project.txt
+
+# Android Studio
+*.gradle
+.idea/
+*.iml
+build/
+gradle*
+local.properties
+
+# OSX garbage
+.DS_Store
