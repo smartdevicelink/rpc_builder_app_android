@@ -8,13 +8,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
-import com.smartdevicelink.protocol.enums.FunctionID;
-import com.smartdevicelink.rpcbuilder.DataModels.RBRequestBuilder;
 import com.smartdevicelink.rpcbuilder.R;
 
 import org.json.JSONException;
@@ -55,10 +55,10 @@ public class SettingsActivity extends AppCompatActivity {
             Log.e("Failure", "No Spec files in assets folder.");
         }
 
-        Spinner connectionSpinner = (Spinner) findViewById(R.id.connection_spinner);
+        final Spinner connectionSpinner = (Spinner) findViewById(R.id.connection_spinner);
         Spinner fileSpinner = (Spinner) findViewById(R.id.file_spinner);
 
-        ArrayAdapter<CharSequence> cs_adapter = ArrayAdapter.createFromResource(this, R.array.connection_methods, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> cs_adapter = ArrayAdapter.createFromResource(this, R.array.connection_methods, android.R.layout.simple_spinner_item);
         ArrayAdapter<String> fs_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spec_files);
 
         cs_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -66,6 +66,29 @@ public class SettingsActivity extends AppCompatActivity {
 
         connectionSpinner.setAdapter(cs_adapter);
         fileSpinner.setAdapter(fs_adapter);
+
+        final EditText ip_field = (EditText) findViewById(R.id.ip_address);
+        final EditText port_field = (EditText) findViewById(R.id.port);
+
+        connectionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // Disable or enable IP address / port
+                String transport = (String) adapterView.getSelectedItem();
+                if(transport.equals("BT")){
+                    ip_field.setEnabled(false);
+                    port_field.setEnabled(false);
+                }else if(transport.equals("TCP")){
+                    ip_field.setEnabled(true);
+                    port_field.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
 
         loadSettings();
     }
