@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.smartdevicelink.exception.SdlException;
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
 import com.smartdevicelink.proxy.RPCRequest;
+import com.smartdevicelink.proxy.RPCResponse;
 import com.smartdevicelink.proxy.SdlProxyALM;
 import com.smartdevicelink.proxy.SdlProxyBuilder;
 import com.smartdevicelink.proxy.callbacks.OnServiceEnded;
@@ -78,7 +80,8 @@ import com.smartdevicelink.proxy.rpc.UpdateTurnListResponse;
 import com.smartdevicelink.proxy.rpc.enums.AppHMIType;
 import com.smartdevicelink.proxy.rpc.enums.Language;
 import com.smartdevicelink.proxy.rpc.enums.SdlDisconnectedReason;
-import com.smartdevicelink.transport.BTTransportConfig;
+import com.smartdevicelink.proxy.rpc.listeners.OnRPCResponseListener;
+import com.smartdevicelink.transport.MultiplexTransportConfig;
 import com.smartdevicelink.transport.TCPTransportConfig;
 import com.smartdevicelink.transport.TransportConstants;
 
@@ -167,10 +170,11 @@ public class SdlService extends Service implements IProxyListenerALM {
                             SdlProxyBuilder.Builder sdlProxyBuilder = new SdlProxyBuilder.Builder(this, rai_appID,
                                     rai_appName, rai_isMediaApplication, this);
 
-                            if(connectionType.equals("BT"))
-                                sdlProxyBuilder.setTransportType(new BTTransportConfig(true));
-                            else
+                            if(connectionType.equals("BT")) {
+                                sdlProxyBuilder.setTransportType(new MultiplexTransportConfig(getApplicationContext(), rai_appID));
+                            }else {
                                 sdlProxyBuilder.setTransportType(new TCPTransportConfig(Integer.parseInt(port), ip_address, true));
+                            }
 
                             if (hash.containsKey(sdlMsgVersion))
                                 sdlProxyBuilder.setSdlMessageVersion(new SdlMsgVersion((Hashtable<String, Object>) hash.get(sdlMsgVersion)));
@@ -221,6 +225,28 @@ public class SdlService extends Service implements IProxyListenerALM {
                         Uri uri = Uri.parse(bulkData);
                         InputStream inputStream = getContentResolver().openInputStream(uri);
                         rpcRequest.setBulkData(getBytes(inputStream));
+                        rpcRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
+                            @Override
+                            public void onResponse(int correlationId, RPCResponse response) {
+                                setListenerType(UPDATE_LISTENER_TYPE_PUT_FILE);
+                                if(response.getSuccess()){
+                                    Log.d("SdlService", "Putfile request was granted.");
+                                }else{
+                                    Log.i("SdlService", "Putfile request was denied.");
+                                }
+                            }
+                        });
+                    }else{
+                        rpcRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
+                            @Override
+                            public void onResponse(int correlationId, RPCResponse response) {
+                                if(response.getSuccess()){
+                                    Log.d("SdlService", "Request was granted.");
+                                }else{
+                                    Log.d("SdlService", "Request was denied.");
+                                }
+                            }
+                        });
                     }
                     proxy.sendRPCRequest(rpcRequest);
                 } catch (SdlException e) {
@@ -290,6 +316,10 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onProxyClosed(String info, Exception e, SdlDisconnectedReason reason) {
+        if(reason.equals(SdlDisconnectedReason.LANGUAGE_CHANGE)){
+            return; // do not stop service for language change
+        }
+
         //Stop the service
         stopSelf();
 

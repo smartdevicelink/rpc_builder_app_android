@@ -343,7 +343,7 @@ public class BuildActivity extends AppCompatActivity {
         if(!connectionEstablished){
             SdlReceiver.queryForConnectedService(this);
 
-            String message = connectionType.equals("TCP") ? "Please wait... If not connected after 15s, app will close." : "Touch 'Find Apps' on Core to connect via Bluetooth.";
+            String message = connectionType.equals("TCP") ? "Please wait... If not connected after 15s, app will close." : "Connecting via Bluetooth...";
 
             progress = ProgressDialog.show(this, "Connecting to Core",
                     message, true);

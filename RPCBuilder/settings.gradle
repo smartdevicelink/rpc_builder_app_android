@@ -1,2 +1,2 @@
-include ':app'
-include ':sdl_android_lib'
+include ':app', ':sdl_android'
+project (":sdl_android").projectDir = new File("/Users/austinkirk/AndroidStudioProjects/AustinApp/sdl_android")
