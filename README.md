@@ -11,7 +11,7 @@ adb install RPCBuilder.apk
 
 ## Interface
 
-###Settings Page
+### Settings Page
 <img src=ReadmeFiles/Settings.png width=200 />
 
 The settings page allows the user to select the currently used RPC spec file, and the transport layer.
@@ -28,7 +28,7 @@ Once proceeding, you will be presented with a Register App Interface (RAI) RPC s
 
 __Please note that once "Send" is pressed, the application will not continue until a successful connection and RAI response is received.__
 
-###Main RPC Table
+### Main RPC Table
 
 <img src=ReadmeFiles/Requests.png width=200 />
 
@@ -40,7 +40,7 @@ If the Spec provides additional information, an information button next to the R
 
 To send an RPC select the RPC from the Table
 
-###RPC Commands
+### RPC Commands
 
 <img src=ReadmeFiles/Requests.png width=200 />
 
