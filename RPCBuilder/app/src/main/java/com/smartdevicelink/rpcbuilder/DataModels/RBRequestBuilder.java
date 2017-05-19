@@ -17,6 +17,7 @@ import com.smartdevicelink.rpcbuilder.Views.UISwitch.RBSwitch;
 import com.smartdevicelink.rpcbuilder.Views.UITextField.RBParamTextField;
 import com.smartdevicelink.util.CorrelationIdGenerator;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -83,6 +84,12 @@ public class RBRequestBuilder {
                         }else {
                             value = ((RBParamTextField) v).getText().toString();
                         }
+
+                        if(((RBParamTextField) v).requiresArray()){
+                            ArrayList array = new ArrayList<>(1);
+                            array.add(value);
+                            value = array;
+                        }
                     } else if (v instanceof RBSwitch) {
                         value = ((RBSwitch) v).isChecked();
                     } else if (v instanceof RBStructButton) {
@@ -98,6 +105,11 @@ public class RBRequestBuilder {
                         }
                     } else if (v instanceof RBEnumSpinner) {
                         value = ((RBEnumSpinner) v).getSelectedItem().toString();
+                        if(((RBEnumSpinner) v).requiresArray()){
+                            ArrayList array = new ArrayList<>(1);
+                            array.add(value);
+                            value = array;
+                        }
                     }
                 }
             }

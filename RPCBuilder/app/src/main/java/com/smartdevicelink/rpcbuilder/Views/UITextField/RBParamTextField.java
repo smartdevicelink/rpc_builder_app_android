@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
-import android.widget.EditText;
 
 import com.smartdevicelink.rpcbuilder.DataModels.RBBaseObject;
 import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
@@ -13,8 +12,9 @@ import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
  * Created by austinkirk on 11/14/16.
  */
 
-public class RBParamTextField extends EditText{
+public class RBParamTextField extends android.support.v7.widget.AppCompatEditText{
     private String mType;
+    private Boolean mRequiresArray = false;
 
     public RBParamTextField(Context context){
         super(context);
@@ -23,6 +23,7 @@ public class RBParamTextField extends EditText{
 
     public void format(RBParam rbParam){
         mType = rbParam.mType;
+        mRequiresArray = rbParam.mRequiresArray;
         InputFilter filter = null;
 
         if(rbParam.mType.equals(RBBaseObject.RBTypeStringKey)){
@@ -96,5 +97,11 @@ public class RBParamTextField extends EditText{
 
     public String getType(){
        return mType;
+    }
+    public boolean requiresArray() {
+        if(mRequiresArray != null)
+            return mRequiresArray;
+        else
+            return false;
     }
 }
