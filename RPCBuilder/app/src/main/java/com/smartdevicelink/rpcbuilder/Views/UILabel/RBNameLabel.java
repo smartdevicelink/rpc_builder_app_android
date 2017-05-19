@@ -12,7 +12,7 @@ import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
  * Created by austinkirk on 11/16/16.
  */
 
-public class RBNameLabel extends TextView {
+public class RBNameLabel extends android.support.v7.widget.AppCompatTextView {
     private Boolean enabled = true;
     private String rbParamName = "";
 

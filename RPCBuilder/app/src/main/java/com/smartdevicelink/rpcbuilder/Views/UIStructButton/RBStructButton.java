@@ -13,7 +13,7 @@ import com.smartdevicelink.rpcbuilder.Fragments.ListStructParamsFragment;
  * Created by austinkirk on 11/15/16.
  */
 
-public class RBStructButton extends Button{
+public class RBStructButton extends android.support.v7.widget.AppCompatButton{
 
     private Context mContext;
     private boolean isArray;
