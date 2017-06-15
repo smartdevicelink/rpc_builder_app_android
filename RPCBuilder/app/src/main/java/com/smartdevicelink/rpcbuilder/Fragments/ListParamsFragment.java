@@ -112,12 +112,6 @@ public class ListParamsFragment extends Fragment {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.send:
-                try {
-                    Log.d("Sending RPC", JsonRPCMarshaller.serializeHashtable(hash).toString(1));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
                 buildActivity.sendRPCRequest(hash);
                 buildActivity.showFragment(ListFuncsFragment.class);
                 return true;
