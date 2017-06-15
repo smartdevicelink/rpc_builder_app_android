@@ -249,6 +249,11 @@ public class SdlService extends Service implements IProxyListenerALM {
                         });
                     }
                     proxy.sendRPCRequest(rpcRequest);
+                    try {
+                        Log.d("RPCBuilderLog", "Sending RPC:\n"+rpcRequest.serializeJSON().toString(1));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } catch (SdlException e) {
                     e.printStackTrace();
                     proxy = null;
