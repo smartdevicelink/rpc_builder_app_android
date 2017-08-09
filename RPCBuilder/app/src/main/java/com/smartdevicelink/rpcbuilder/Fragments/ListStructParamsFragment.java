@@ -12,10 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
-import com.smartdevicelink.rpcbuilder.DataModels.RBParam;
 import com.smartdevicelink.rpcbuilder.DataModels.RBStruct;
 import com.smartdevicelink.rpcbuilder.R;
-import com.smartdevicelink.rpcbuilder.Views.RBParamView;
+import com.smartdevicelink.rpcbuilder.Views.RBStructParamView;
 
 /**
  * Created by austinkirk on 11/15/16.
@@ -38,7 +37,7 @@ public class ListStructParamsFragment extends Fragment {
         if(request != null) {
             ScrollView scrollView = (ScrollView) view.findViewById(R.id.param_scroller);
 
-            RBParamView rb = new RBParamView(getActivity());
+            RBStructParamView rb = new RBStructParamView(getActivity());
             rb.giveRequest(request);
             rb.setId(R.id.param_holder);
             scrollView.addView(rb);
