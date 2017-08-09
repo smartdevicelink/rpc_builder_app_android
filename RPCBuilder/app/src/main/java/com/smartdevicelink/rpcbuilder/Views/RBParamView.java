@@ -88,7 +88,7 @@ public class RBParamView extends LinearLayout {
             if(rbParam.mRequiresArray != null){
                 view.setArray(rbParam.mRequiresArray);
             }
-            view.format(rbStruct);
+            view.format(rbStruct, this);
             wrap_params.gravity = Gravity.LEFT;
             view.setLayoutParams(wrap_params);
             view.setText("UPDATE");

@@ -31,6 +31,7 @@ import com.smartdevicelink.proxy.rpc.DialNumberResponse;
 import com.smartdevicelink.proxy.rpc.EndAudioPassThruResponse;
 import com.smartdevicelink.proxy.rpc.GenericResponse;
 import com.smartdevicelink.proxy.rpc.GetDTCsResponse;
+import com.smartdevicelink.proxy.rpc.GetSystemCapabilityResponse;
 import com.smartdevicelink.proxy.rpc.GetVehicleDataResponse;
 import com.smartdevicelink.proxy.rpc.GetWayPointsResponse;
 import com.smartdevicelink.proxy.rpc.ListFilesResponse;
@@ -321,10 +322,6 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onProxyClosed(String info, Exception e, SdlDisconnectedReason reason) {
-        if(reason.equals(SdlDisconnectedReason.LANGUAGE_CHANGE)){
-            return; // do not stop service for language change
-        }
-
         //Stop the service
         stopSelf();
 
@@ -642,7 +639,12 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     }
 
-    @Override
+	@Override
+	public void onGetSystemCapabilityResponse(GetSystemCapabilityResponse response) {
+
+	}
+
+	@Override
     public void onOnHMIStatus(OnHMIStatus notification) {
 
         switch(notification.getHmiLevel()) {

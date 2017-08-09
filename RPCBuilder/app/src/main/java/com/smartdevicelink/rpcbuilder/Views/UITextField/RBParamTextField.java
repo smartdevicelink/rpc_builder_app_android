@@ -32,7 +32,7 @@ public class RBParamTextField extends android.support.v7.widget.AppCompatEditTex
             this.setInputType(InputType.TYPE_CLASS_NUMBER);
         }else if(rbParam.mType.equals(RBBaseObject.RBTypeLongKey) || rbParam.mType.equals(RBBaseObject.RBTypeFloatKey) ||
         rbParam.mType.equals(RBBaseObject.RBTypeDoubleKey)){
-            this.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
+            this.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
 
         if(rbParam.mDefaultValue != null)
