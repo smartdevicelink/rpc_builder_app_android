@@ -81,6 +81,24 @@ public class RBRequestBuilder {
                             }catch (NumberFormatException e){
                                 value = ((RBParamTextField) v).getText().toString();
                             }
+                        }else if(((RBParamTextField) v).getType().equals("Long")){
+	                        try {
+		                        value = Long.parseLong(((RBParamTextField) v).getText().toString());
+	                        }catch (NumberFormatException e){
+		                        value = ((RBParamTextField) v).getText().toString();
+	                        }
+                        }else if(((RBParamTextField) v).getType().equals("Float")){
+	                        try {
+		                        value = Float.parseFloat(((RBParamTextField) v).getText().toString());
+	                        }catch (NumberFormatException e){
+		                        value = ((RBParamTextField) v).getText().toString();
+	                        }
+                        }else if(((RBParamTextField) v).getType().equals("Double")){
+	                        try {
+		                        value = Double.parseDouble(((RBParamTextField) v).getText().toString());
+	                        }catch (NumberFormatException e){
+		                        value = ((RBParamTextField) v).getText().toString();
+	                        }
                         }else {
                             value = ((RBParamTextField) v).getText().toString();
                         }
