@@ -1,2 +1,0 @@
-int drawable ic_sdl 0x7f020000
-int drawable sdl_tray_icon 0x7f020001
