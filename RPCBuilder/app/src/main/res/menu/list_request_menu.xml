@@ -7,4 +7,10 @@
         android:title="Settings"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/logger"
+        android:icon="@drawable/ic_assignment_white_36dp"
+        android:title="Logger"
+        app:showAsAction="ifRoom"/>
+
 </menu>

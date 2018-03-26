@@ -3,11 +3,15 @@ package com.smartdevicelink.rpcbuilder.Fragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,6 +22,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 
 import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
+import com.smartdevicelink.rpcbuilder.Activities.LogActivity;
 import com.smartdevicelink.rpcbuilder.DataModels.RBFunction;
 import com.smartdevicelink.rpcbuilder.R;
 import com.smartdevicelink.rpcbuilder.Views.RBFuncView;
@@ -64,17 +69,17 @@ public class ListFuncsFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(hidden == false) {
+        if(!hidden) {
             getActivity().setTitle(title);
             ((BuildActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
     }
 
     @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.list_request_menu, menu);
-    }
+	public void onCreateOptionsMenu(
+			Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.list_request_menu, menu);
+	}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -99,6 +104,12 @@ public class ListFuncsFragment extends Fragment {
                 // 4. Get the AlertDialog from create()
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                return true;
+
+	        case R.id.logger:
+	        	Intent intent = new Intent(getActivity(), LogActivity.class);
+	        	startActivity(intent);
+	        	return true;
 
             default:
                 // If we got here, the user's action was not recognized.
@@ -107,6 +118,5 @@ public class ListFuncsFragment extends Fragment {
 
         }
     }
-
 }
 

@@ -17,8 +17,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                file("$project.buildDir/apk/RPCBuilder.apk")
+            variant.outputs.all { output ->
+                outputFileName = file("RPCBuilder.apk")
             }
         }
     }

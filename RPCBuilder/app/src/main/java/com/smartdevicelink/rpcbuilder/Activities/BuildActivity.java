@@ -9,13 +9,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.WindowManager;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
@@ -33,7 +37,9 @@ import com.smartdevicelink.rpcbuilder.SmartDeviceLink.SdlService;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
@@ -43,6 +49,7 @@ import java.util.TimerTask;
 public class BuildActivity extends AppCompatActivity {
     public final int FILE_PICKER_SUCCESS = 12;
     private Boolean connectionEstablished = false;
+	public static final String LOG_FILENAME = "LOG_FILE";
 
     private String filename = "Mobile_API_4.1.xml";
     private String ip_address = "";
@@ -62,6 +69,11 @@ public class BuildActivity extends AppCompatActivity {
     public final String LIST_STRUCT_PARAMS_KEY = "LIST_STRUCT_PARAMS";
 
     ConnectionReceiver connectionReceiver;
+    BroadcastReceiver logReceiver;
+
+	public static final String LOG_TEXT_ACTION = "LOG_TEXT_ACTION";
+	public static final String LOG_TEXT_EXTRA = "LOG_TEXT";
+	public static final String OUTGOING_MSG_EXTRA = "OUTGOING_MSG";
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -86,15 +98,12 @@ public class BuildActivity extends AppCompatActivity {
             }
 
             if(RAI_request == null) { // there is no RAI spec in XML file, go back to Settings
-                Toast.makeText(this, "No RegisterAppInterface function in XML file", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "No RegisterAppInterface function in XML file", Toast.LENGTH_SHORT).show();
                 finish();
             }else{
                 rbFunction = RAI_request; // Set the current function to be RAI
                 showFragment(ListParamsFragment.class); // Show the parameters for RAI
             }
-
-        }else{ // Currently not called by another Activity
-
         }
     }
 
@@ -103,6 +112,7 @@ public class BuildActivity extends AppCompatActivity {
         Intent sdlServiceIntent = new Intent(this, SdlService.class);
         stopService(sdlServiceIntent); // make sure Sdl Service is stopped.
         connectionEstablished = false;
+	    deleteLogFile(); // delete Log file from this app session
         super.onDestroy();
     }
 
@@ -114,17 +124,30 @@ public class BuildActivity extends AppCompatActivity {
         intentFilter.addAction(SdlService.CONNECTION_NOTIFICATION_ACTION);
         registerReceiver(connectionReceiver, intentFilter);
 
+	    logReceiver = new BroadcastReceiver() {
+		    @Override
+		    public void onReceive(Context context, Intent intent) {
+			    String text = intent.getStringExtra(LOG_TEXT_EXTRA);
+			    Boolean outgoing = intent.getBooleanExtra(OUTGOING_MSG_EXTRA, false);
+			    // Write to temp file
+			    writeToLogFile(text);
+		    }
+	    };
+	    intentFilter = new IntentFilter();
+	    intentFilter.addAction(LOG_TEXT_ACTION);
+	    registerReceiver(logReceiver, intentFilter);
+
         super.onStart();
     }
 
     @Override
     protected void onStop() {
         unregisterReceiver(connectionReceiver);
-
+	    unregisterReceiver(logReceiver);
         super.onStop();
     }
 
-    private class ConnectionReceiver extends BroadcastReceiver {
+	private class ConnectionReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context arg0, Intent arg1) {
@@ -394,6 +417,43 @@ public class BuildActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         startService(sdlServiceIntent);
+    }
+
+    private void writeToLogFile(String s){
+    	if(s == null) return;
+	    FileOutputStream outputStream = null;
+
+	    try {
+		    File file = new File(this.getFilesDir(), LOG_FILENAME);
+		    outputStream = new FileOutputStream(file, true); // will overwrite existing data
+
+		    if(!file.exists()){
+			    file.createNewFile();
+		    }
+	    } catch (java.io.IOException e) {
+		    e.printStackTrace();
+	    }
+
+	    try {
+		    outputStream.write(s.getBytes());
+		    outputStream.flush();
+		    outputStream.close();
+	    } catch (Exception e) {
+		    e.printStackTrace();
+	    }
+    }
+
+    private void deleteLogFile(){
+	    try {
+		    File file = new File(this.getFilesDir(), LOG_FILENAME);
+
+		    if(file.exists()){
+			    file.delete();
+		    }
+	    } catch (Exception e) {
+		    e.printStackTrace();
+	    }
+
     }
 
     @Override

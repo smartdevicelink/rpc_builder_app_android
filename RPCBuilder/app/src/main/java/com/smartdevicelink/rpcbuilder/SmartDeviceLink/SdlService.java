@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.smartdevicelink.exception.SdlException;
 import com.smartdevicelink.marshal.JsonRPCMarshaller;
+import com.smartdevicelink.proxy.RPCMessage;
 import com.smartdevicelink.proxy.RPCRequest;
 import com.smartdevicelink.proxy.RPCResponse;
 import com.smartdevicelink.proxy.SdlProxyALM;
@@ -87,6 +88,8 @@ import com.smartdevicelink.proxy.rpc.enums.AppHMIType;
 import com.smartdevicelink.proxy.rpc.enums.Language;
 import com.smartdevicelink.proxy.rpc.enums.SdlDisconnectedReason;
 import com.smartdevicelink.proxy.rpc.listeners.OnRPCResponseListener;
+import com.smartdevicelink.rpcbuilder.Activities.BuildActivity;
+import com.smartdevicelink.rpcbuilder.Activities.LogActivity;
 import com.smartdevicelink.transport.MultiplexTransportConfig;
 import com.smartdevicelink.transport.TCPTransportConfig;
 import com.smartdevicelink.transport.TransportConstants;
@@ -98,6 +101,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -257,6 +261,7 @@ public class SdlService extends Service implements IProxyListenerALM {
                     proxy.sendRPCRequest(rpcRequest);
                     try {
                         Log.d("RPCBuilderLog", "Sending RPC:\n"+rpcRequest.serializeJSON().toString(1));
+                        logRPCMessage(rpcRequest, true);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -273,6 +278,20 @@ public class SdlService extends Service implements IProxyListenerALM {
 
         //use START_STICKY because we want the SDLService to be explicitly started and stopped as needed.
         return START_STICKY;
+    }
+
+    private void logRPCMessage(RPCMessage request, Boolean outgoing) {
+	    Intent intent = new Intent(BuildActivity.LOG_TEXT_ACTION);
+	    try {
+	    	// append timestamp
+		    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		    String ts = timestamp.toString() + "\n";
+		    intent.putExtra(BuildActivity.LOG_TEXT_EXTRA, ts + request.serializeJSON().toString(1) + "\n\r");
+		    intent.putExtra(BuildActivity.OUTGOING_MSG_EXTRA, outgoing);
+		    sendBroadcast(intent);
+	    } catch (JSONException e) {
+		    e.printStackTrace();
+	    }
     }
 
     private byte[] getBytes(InputStream inputStream) throws IOException {
@@ -350,12 +369,12 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onOnStreamRPC(OnStreamRPC notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onStreamRPCResponse(StreamRPCResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
@@ -365,95 +384,97 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onGenericResponse(GenericResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnCommand(OnCommand notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onAddCommandResponse(AddCommandResponse response) {
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onAddSubMenuResponse(AddSubMenuResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onCreateInteractionChoiceSetResponse(CreateInteractionChoiceSetResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onAlertResponse(AlertResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onDeleteCommandResponse(DeleteCommandResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onDeleteInteractionChoiceSetResponse(DeleteInteractionChoiceSetResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onDeleteSubMenuResponse(DeleteSubMenuResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onPerformInteractionResponse(PerformInteractionResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onResetGlobalPropertiesResponse(ResetGlobalPropertiesResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onSetGlobalPropertiesResponse(SetGlobalPropertiesResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onSetMediaClockTimerResponse(SetMediaClockTimerResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onShowResponse(ShowResponse response) {
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onSpeakResponse(SpeakResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnButtonEvent(OnButtonEvent notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onOnButtonPress(OnButtonPress notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onSubscribeButtonResponse(SubscribeButtonResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onUnsubscribeButtonResponse(UnsubscribeButtonResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
@@ -463,160 +484,162 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onSubscribeVehicleDataResponse(SubscribeVehicleDataResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onUnsubscribeVehicleDataResponse(UnsubscribeVehicleDataResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onGetVehicleDataResponse(GetVehicleDataResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnVehicleData(OnVehicleData notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onPerformAudioPassThruResponse(PerformAudioPassThruResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onEndAudioPassThruResponse(EndAudioPassThruResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnAudioPassThru(OnAudioPassThru notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onPutFileResponse(PutFileResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onDeleteFileResponse(DeleteFileResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onListFilesResponse(ListFilesResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onSetAppIconResponse(SetAppIconResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onScrollableMessageResponse(ScrollableMessageResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onChangeRegistrationResponse(ChangeRegistrationResponse response) {
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onSetDisplayLayoutResponse(SetDisplayLayoutResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnLanguageChange(OnLanguageChange notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onOnHashChange(OnHashChange notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onSliderResponse(SliderResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnDriverDistraction(OnDriverDistraction notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onOnTBTClientState(OnTBTClientState notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onOnSystemRequest(OnSystemRequest notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onSystemRequestResponse(SystemRequestResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnKeyboardInput(OnKeyboardInput notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onOnTouchEvent(OnTouchEvent notification) {
-
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onDiagnosticMessageResponse(DiagnosticMessageResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onReadDIDResponse(ReadDIDResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onGetDTCsResponse(GetDTCsResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnLockScreenNotification(OnLockScreenStatus notification) {
+	    logRPCMessage(notification, false);
     }
 
     @Override
     public void onDialNumberResponse(DialNumberResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onSendLocationResponse(SendLocationResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onShowConstantTbtResponse(ShowConstantTbtResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onAlertManeuverResponse(AlertManeuverResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onUpdateTurnListResponse(UpdateTurnListResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
@@ -626,52 +649,52 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     @Override
     public void onGetWayPointsResponse(GetWayPointsResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onSubscribeWayPointsResponse(SubscribeWayPointsResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onUnsubscribeWayPointsResponse(UnsubscribeWayPointsResponse response) {
-
+	    logRPCMessage(response, false);
     }
 
     @Override
     public void onOnWayPointChange(OnWayPointChange notification) {
-
+	    logRPCMessage(notification, false);
     }
 
 	@Override
 	public void onGetSystemCapabilityResponse(GetSystemCapabilityResponse response) {
-
+		logRPCMessage(response, false);
 	}
 
 	@Override
 	public void onGetInteriorVehicleDataResponse(GetInteriorVehicleDataResponse response) {
-
+		logRPCMessage(response, false);
 	}
 
 	@Override
 	public void onButtonPressResponse(ButtonPressResponse response) {
-
+		logRPCMessage(response, false);
 	}
 
 	@Override
 	public void onSetInteriorVehicleDataResponse(SetInteriorVehicleDataResponse response) {
-
+		logRPCMessage(response, false);
 	}
 
 	@Override
 	public void onOnInteriorVehicleData(OnInteriorVehicleData notification) {
-
+		logRPCMessage(notification, false);
 	}
 
 	@Override
 	public void onSendHapticDataResponse(SendHapticDataResponse response) {
-
+		logRPCMessage(response, false);
 	}
 
 	@Override
