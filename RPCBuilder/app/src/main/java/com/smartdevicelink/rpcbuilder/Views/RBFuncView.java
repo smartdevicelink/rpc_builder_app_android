@@ -93,10 +93,10 @@ public class RBFuncView extends LinearLayout {
         layout_params.height = LayoutParams.MATCH_PARENT;
         layout_params.weight = 1f;
         layout_params.gravity = Gravity.CENTER;
-        layout_params.setMargins(10, 0, 0, 0);
+        layout_params.setMargins((int) getResources().getDimension(R.dimen.function_margin), 0, 0, 0);
         textView.setLayoutParams(layout_params);
         textView.setText(RBNameLabel.convertCamelCase(rbf.name));
-        //textView.setTextSize(R.dimen.font_size_medium);
+        textView.setTextColor(getResources().getColor(R.color.colorAccent));
         textView.setGravity(Gravity.CENTER_VERTICAL);
         textView.setOnClickListener(new OnClickListener() {
             @Override
@@ -119,6 +119,8 @@ public class RBFuncView extends LinearLayout {
         imageButton.setLayoutParams(layout_params);
         imageButton.setBackgroundColor(Color.TRANSPARENT);
         imageButton.setImageResource(R.drawable.ic_info_outline_white_36dp);
+        imageButton.setScaleX(0.65f);
+	    imageButton.setScaleY(0.65f);
         imageButton.setVisibility(INVISIBLE);
         if(rbf.objectDescription != null) {
             imageButton.setVisibility(VISIBLE);
