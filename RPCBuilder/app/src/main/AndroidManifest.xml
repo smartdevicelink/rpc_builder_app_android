@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".Activities.BuildActivity" android:label="RPC Builder" android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".Activities.LogActivity" android:label="RPC Builder" android:screenOrientation="portrait">
+        </activity>
         <service
             android:name=".SmartDeviceLink.SdlService"
             android:enabled="true"/>
