@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 
 public class LogActivity extends AppCompatActivity {
-	final static int COLOR_OUTGOING = Color.CYAN;
+	final static int COLOR_OUTGOING = Color.WHITE;
 	final static int COLOR_INCOMING = Color.BLUE;
 	ScrollView loggerText;
 	private String title = "Communication Log";
