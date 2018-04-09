@@ -16,7 +16,7 @@ adb install RPCBuilder.apk
 
 The settings page allows the user to select the currently used RPC spec file, and the transport layer.
 
-By default, there are two Mobile_API.xml files used to generate the RPC interfaces usable by the app. Please be sure to select this file to proceed.
+By default, there are two Mobile_API.xml files used to generate the RPC interfaces usable by the app. Please be sure to select one of these files to proceed.
 
 For the transport layer the current options included BT (Bluetooth) or TCP/IP. If TCP/IP is selected the user has to input the SDL Server IP Address and Port. If using BT, you can disregard these two fields.
 
@@ -38,8 +38,6 @@ If the Spec provides additional information, an information button next to the R
 
 <img src=ReadmeFiles/RequestInfo.png width=200 />
 
-To send an RPC select the RPC from the Table
-
 ### RPC Commands
 
 <img src=ReadmeFiles/Requests.png width=200 />
@@ -48,7 +46,7 @@ When selecting an RPC command the App will show a view with all possible paramet
 
 There are three different ways to send an argument of an RPC.
 
-* Send with data.
+* Send with data
  * To send an argument with data just add the information next to the arguments name.
 * Send without data
  * To send an argument with an empty string, leave the field next to the argument name empty
@@ -57,11 +55,19 @@ There are three different ways to send an argument of an RPC.
 
 <img src=ReadmeFiles/EnableDisable.png width=200 />
 
-Alert Text1 and Alert Text3 will not be included in the RPC Request, but Alert Text2 will be included with an empty string.
+Alert Text2 and Alert Text3 will not be included in the RPC Request, but Alert Text1 will be included with a "hello" string.
 Required data will have asterisks next to the argument name.
 
+### Logging
+
+You can reach the logging screen by pressing the rightmost button at the top of the RPC Requests screen.
+
+<img src=ReadmeFiles/Logging.png width=200 />
+
+This log will print all of the outgoing requests to core and most of the incoming responses from core. To clear the log, press the trash button in the upper right.
+
 ### A Special Note about Putfile
-Putfile is the RPC responsible for sending binary data from our mobile libraries to core. This application provides support for adding any type of file; either from the Camera roll (for images) or iTunes shared storage for any other files. Similar to adding custom RPC Spec files, any file located within the `BulkData` directory will be present in Local Storage and be usable for upload.
+Putfile is the RPC responsible for sending binary data from our mobile libraries to core. This application provides support for adding any type of file. Similar to adding custom RPC Spec files, any file located within the `BulkData` directory will be present in Local Storage and be usable for upload.
 
 ## Need Help?
 If you need general assistance, or have other questions, you can [sign up](http://slack.smartdevicelink.org/) for the [SDL Slack](https://smartdevicelink.slack.com/) and chat with other developers and the maintainers of the project.
