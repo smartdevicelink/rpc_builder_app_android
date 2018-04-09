@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.2"
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.smartdevicelink.rpcbuilder"
         minSdkVersion 14 //for functionality
@@ -15,11 +15,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        applicationVariants.all { variant ->
-            variant.outputs.all { output ->
-                outputFileName = file("RPCBuilder.apk")
-            }
         }
     }
 }
