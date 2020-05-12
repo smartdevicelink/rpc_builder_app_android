@@ -1,11 +1,11 @@
 ### RPC BUILDER APP ANDROID
 
-Copyright (C) 2018      SmartDeviceLink Consortium, Inc.
+Copyright (C) 2020      SmartDeviceLink Consortium, Inc.
 
 
 #### License
 
-Copyright (c) 2017, SmartDeviceLink Consortium, Inc.
+Copyright (c) 2020, SmartDeviceLink Consortium, Inc.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
